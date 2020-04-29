@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Beer App</string>
+    <string name="homeItemString">Home</string>
+    <string name="dashBoardItemString">Dashboard</string>
+    <string name="settingsItemString">Settings</string>
+    <string name="dashboardTextViewString">Dashboard</string>
+    <string name="settingsTextViewString">Settings</string>
+    <string name="search_title">Search</string>
+</resources>
