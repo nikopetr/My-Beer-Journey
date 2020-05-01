@@ -3,14 +3,14 @@
     <item
         android:id="@+id/homeItem"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/homeItemString"/>
+        android:title="@string/home_item_string"/>
 
     <item
         android:id="@+id/dashBoardItem"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/dashBoardItemString"/>
+        android:title="@string/dashboard_item_string"/>
     <item
         android:id="@+id/settingsItem"
         android:icon="@drawable/ic_settings_black_24dp"
-        android:title="@string/settingsItemString"/>
+        android:title="@string/settings_item_string"/>
 </menu>

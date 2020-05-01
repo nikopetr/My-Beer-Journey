@@ -9,18 +9,14 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    // The fragments used for the bottom navigation view
-    private HomeFragment homeFragment;
-    private DashBoardFragment dashBoardFragment;
-    private SettingsFragment settingsFragment;
-
-
+    private SerializableFragment currentFragment;
     private ActionBar actionBar; // A primary toolbar within the activity used to display the information of each fragment
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -32,17 +28,20 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.homeItem:
                     actionBar.setTitle("Home");
-                    loadFragment(homeFragment);
+                    currentFragment = new HomeFragment();
+                    loadFragment(currentFragment);
                     return true;
 
                 case R.id.dashBoardItem:
                     actionBar.setTitle("Dashboard");
-                    loadFragment(dashBoardFragment);
+                    currentFragment = new DashBoardFragment();
+                    loadFragment(currentFragment);
                     return true;
 
                 case R.id.settingsItem:
                     actionBar.setTitle("Settings");
-                    loadFragment(settingsFragment);
+                    currentFragment = new SettingsFragment();
+                    loadFragment(currentFragment);
                     return true;
             }
             return false;
@@ -55,18 +54,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        // Initializing fragments
-        homeFragment = new HomeFragment();
-        dashBoardFragment = new DashBoardFragment();
-        settingsFragment = new SettingsFragment();
-
         actionBar = getSupportActionBar(); // Initializing toolbar
         BottomNavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        actionBar.setTitle("Home"); // Changes the title of the toolbar
-        loadFragment(homeFragment);
+
+        if (savedInstanceState != null){
+            //Retrieve data from the Bundle and restore the dynamic state of the UI
+            currentFragment =  (SerializableFragment)savedInstanceState.getSerializable("fragmentSaved");
+        }
+        else {
+            //Initialize the UI
+            actionBar.setTitle("Home"); // Changes the title of the toolbar
+            currentFragment = new HomeFragment();
+            loadFragment(currentFragment);
+        }
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //Save which fragment was loaded to the Bundle
+        outState.putSerializable("fragmentSaved", currentFragment);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -80,4 +91,17 @@ public class MainActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+    // Overwritten function in oder to finish activity if back is pressed and the fragment stack has only 1 fragment
+    @Override
+    public void onBackPressed(){
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
+        }
+        else {
+            super.onBackPressed();
+        }
+    }
+
+
 }

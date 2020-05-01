@@ -1,34 +1,34 @@
 package com.example.beerapp;
 
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends SerializableFragment {
 
-    private ListView beerListView;
-    private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
-    private List<String> beerList;
+//    private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
+    private List<Beer> beerList;
 
     public HomeFragment() {
-        Log.i("HomeFragment","HomeFragment object created");
+        Log.d("HomeFragment","HomeFragment object created");
 
         beerList = new ArrayList<>();
-        beerList.add("keo"); beerList.add("alfa"); beerList.add("corona");
+        beerList.add(new Beer("keo", R.drawable.ic_local_drink_black_24dp));
+        beerList.add(new Beer("alfa", R.drawable.ic_local_drink_black_24dp));
+        beerList.add(new Beer("corona", R.drawable.ic_local_drink_black_24dp));
     }
 
     @Override
@@ -39,15 +39,22 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        beerListView = fragmentView.findViewById(R.id.beerListView);
-        beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, null); // Array adapter for the beer list
+        ListView beerListView = fragmentView.findViewById(R.id.beerListView);
+        final BeerArrayAdapter beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList); // Array adapter for the beer list
         beerListView.setAdapter(beerListArrayAdapter);
+        beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                seeBeerDetailsScreen(null);
+            }
+        });
 
         SearchView searchView = fragmentView.findViewById(R.id.searchView); // Initializes the search item
         searchView.setQueryHint("Search for a beer");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 return false;
             }
 
@@ -56,8 +63,23 @@ public class HomeFragment extends Fragment {
                 beerListArrayAdapter.getFilter().filter(newText);
                 return false;
             }
+
+
         });
         return fragmentView;
+    }
+
+
+    void seeBeerDetailsScreen(View view)
+    {
+        //Create the Intent to start the SayHelloNewScreen Activity
+        Intent intent = new Intent(getContext(), BeerDetailsActivity.class);
+        //Pass data to the SayHelloNewScreen Activity through the Intent
+        Beer testBeer = new Beer("KEOTEST",R.drawable.ic_local_drink_black_24dp);
+        intent.putExtra("selectedBeer", testBeer);
+        //Ask Android to start the new Activity
+        startActivity(intent);
+
     }
 
 }
