@@ -49,14 +49,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Method for adding a new Beer to the DB
-//    public void addBeer(Beer beer) {
-//        ContentValues values = new ContentValues();
-//        values.put(COLUMN_NAME, beer.getBeerName());
-//        values.put(COLUMN_QUANTITY, beer.getQuantity());
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.insert(TABLE_PRODUCTS, null, values);
-//        db.close();
-//    }
+    public void addBeer(Beer beer) {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, beer.getBeerName());
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(TABLE_BEERS, null, values);
+        db.close();
+    }
 
     //Μέθοδος για εύρεση προιόντος βάσει ονομασίας του
 //    public Product findProduct(String productname) {
@@ -98,7 +97,7 @@ public class DBHandler extends SQLiteOpenHelper {
 //    }
 
     // Returns all the Beer objects from the DB
-    public List<Beer> getAllBeers() {
+    List<Beer> getAllBeers() {
         String query = "SELECT * FROM " + TABLE_BEERS ;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);

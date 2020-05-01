@@ -15,7 +15,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Constant Strings used for the different action bar titles
+    private final String BEER_CATALOG_TITLE = "Beer Catalog";
+    private final String DRINK_SESSIONS_TITLE = "My Drink Sessions";
+    private final String SETTINGS_TITLE = "Settings";
+
     private SerializableFragment currentFragment; // The fragment that is currently active
+
     private ActionBar actionBar; // A primary toolbar within the activity used to display the information of each fragment
 
     @Override
@@ -33,19 +39,19 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.beerCatalogItem:
-                        actionBar.setTitle("Beer Catalog");
+                        actionBar.setTitle(BEER_CATALOG_TITLE);
                         currentFragment = new BeerCatalogFragment();
                         loadFragment(currentFragment);
                         return true;
 
                     case R.id.drinkSessionsItem:
-                        actionBar.setTitle("My Stats");
+                        actionBar.setTitle(DRINK_SESSIONS_TITLE);
                         currentFragment = new DrinkSessionsFragment();
                         loadFragment(currentFragment);
                         return true;
 
                     case R.id.settingsItem:
-                        actionBar.setTitle("Settings");
+                        actionBar.setTitle(SETTINGS_TITLE);
                         currentFragment = new SettingsFragment();
                         loadFragment(currentFragment);
                         return true;
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null){
             //Retrieve data from the Bundle and restore the dynamic state of the UI
             currentFragment =  (SerializableFragment)savedInstanceState.getSerializable("fragmentSaved");
+            actionBar.setTitle(savedInstanceState.getCharSequence("actonBarTitleSaved"));
         }
         else {
             //Initialize the UI
@@ -76,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        //Save which fragment was loaded to the Bundle
-        outState.putSerializable("fragmentSaved", currentFragment);
+        // Save which fragment was loaded to the Bundle and the current title of the aciton bar
+        outState.putSerializable("fragmentSaved",currentFragment);
+        outState.putCharSequence("actonBarTitleSaved",actionBar.getTitle());
     }
 
     @Override

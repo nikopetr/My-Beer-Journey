@@ -1,6 +1,7 @@
 package com.example.beerapp;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,10 +26,11 @@ public class BeerCatalogFragment extends SerializableFragment {
     public BeerCatalogFragment() {
         Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
 
-        beerList = new ArrayList<>();
-        beerList.add(new Beer("keo", R.drawable.ic_local_drink_black_24dp));
-        beerList.add(new Beer("alfa", R.drawable.ic_local_drink_black_24dp));
-        beerList.add(new Beer("corona", R.drawable.ic_local_drink_black_24dp));
+
+
+//        beerList.add(new Beer("keo", R.drawable.ic_local_drink_black_24dp));
+//        beerList.add(new Beer("alfa", R.drawable.ic_local_drink_black_24dp));
+//        beerList.add(new Beer("corona", R.drawable.ic_local_drink_black_24dp));
     }
 
     @Override
@@ -39,9 +41,13 @@ public class BeerCatalogFragment extends SerializableFragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
-        ListView beerListView = fragmentView.findViewById(R.id.beerListView);
 
-        //Array adapter for the beer list
+        // Retrieves the beer objects from the DB
+        DBHandler dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
+        beerList = dbHandler.getAllBeers();
+
+        ListView beerListView = fragmentView.findViewById(R.id.beerListView);
+        //  Array adapter for the beer list
         final BeerArrayAdapter beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList); // Array adapter for the beer list
         beerListView.setAdapter(beerListArrayAdapter);
         beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,7 +62,6 @@ public class BeerCatalogFragment extends SerializableFragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 return false;
             }
 
@@ -68,6 +73,12 @@ public class BeerCatalogFragment extends SerializableFragment {
 
 
         });
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((SearchView) view).onActionViewExpanded();
+            }
+        });
         return fragmentView;
     }
 
@@ -75,13 +86,12 @@ public class BeerCatalogFragment extends SerializableFragment {
     // Method for creating intent and passing the Beer object to the new activity
     private void seeBeerDetailsScreen(Beer beerSelected)
     {
-        //Create the Intent to start the SayHelloNewScreen Activity
+        // Create the Intent to start the SayHelloNewScreen Activity
         Intent intent = new Intent(getContext(), BeerDetailsActivity.class);
-        //Pass data to the SayHelloNewScreen Activity through the Intent
+        // Pass data to the SayHelloNewScreen Activity through the Intent
         intent.putExtra("selectedBeer", beerSelected);
-        //Ask Android to start the new Activity
+        // Ask Android to start the new Activity
         startActivity(intent);
-
     }
 
 }
