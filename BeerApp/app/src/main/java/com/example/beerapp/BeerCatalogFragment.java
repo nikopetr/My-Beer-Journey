@@ -17,13 +17,13 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class HomeFragment extends SerializableFragment {
+public class BeerCatalogFragment extends SerializableFragment {
 
 //    private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> beerList;
 
-    public HomeFragment() {
-        Log.d("HomeFragment","HomeFragment object created");
+    public BeerCatalogFragment() {
+        Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
 
         beerList = new ArrayList<>();
         beerList.add(new Beer("keo", R.drawable.ic_local_drink_black_24dp));
@@ -34,10 +34,10 @@ public class HomeFragment extends SerializableFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Log.i("HomeFragment","HomeFragment view created");
+        Log.i("BeerCatalogFragment","BeerCatalogFragment view created");
 
         // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
         ListView beerListView = fragmentView.findViewById(R.id.beerListView);
         final BeerArrayAdapter beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList); // Array adapter for the beer list

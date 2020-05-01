@@ -1,14 +1,13 @@
 <resources>
     <string name="app_name">Beer App</string>
-    <string name="home_item_string">Home</string>
-    <string name="dashboard_item_string">Dashboard</string>
+    <string name="beer_Catalog_item_string">Beer Catalog</string>
+    <string name="drink_sessions_item_string">Drink Sessions</string>
+    <string name="my_beer_list_item_string">My Beer List</string>
     <string name="settings_item_string">Settings</string>
-    <string name="dashboard_string">Dashboard</string>
-    <string name="settings_String">Settings</string>
 
     <string name="search_title_string">Search</string>
 
-   <!-- Strings for activity_beer_details -->
+   <!-- Strings for activity_beer -->
     <string name="beer_name">Beer Name</string>
     <string name="beer_type">Type: type</string>
     <string name="beer_manufacturer">Manufacturer: manufacturer</string>
@@ -19,4 +18,17 @@
     <string name="beer_image_caption">Beer Image</string>
 
 
+    <!--  Strings for fragment_drink_sessions -->
+    <string name="my_stats">My Stats</string>
+    <string name="different_beers_tasted">Different beers tasted:</string>
+    <string name="total_beer_consumed">Total beer consumed:</string>
+    <string name="total_time_spent_drinking">Total time spent drinking:</string>
+    <string name="most_beer_consumed_in_a_session">Most beer consumed in a session:</string>
+    <string name="drink_session">Drink Session</string>
+    <string name="start_session">START SESSION</string>
+    <string name="stop_session">STOP</string>
+    <string name="time_drinking">Time drinking:</string>
+    <string name="total_beer_drank_number">Total beer drank: number</string>
+    <string name="add_a_half_pint">Add a half pint</string>
+    <string name="add_a_pint">Add a pint</string>
 </resources>

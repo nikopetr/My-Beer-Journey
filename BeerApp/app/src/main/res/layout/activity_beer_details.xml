@@ -6,80 +6,75 @@
     android:layout_height="match_parent"
     tools:context=".BeerDetailsActivity">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/addWantTasteButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/beerNameTextView">
+
+        <TextView
+            android:id="@+id/manufacturerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/beer_manufacturer"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/countryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/beer_country"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/abvTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/beer_abv"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/typeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/beer_type"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/beerImageView"
         android:layout_width="108dp"
         android:layout_height="226dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
         android:contentDescription="@string/beer_image_caption"
         app:layout_constraintBottom_toTopOf="@+id/addTastedButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/beerNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@drawable/ic_local_drink_black_24dp" />
 
     <TextView
         android:id="@+id/beerNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
         android:text="@string/beer_name"
         android:textSize="42sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/typeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="64dp"
-        android:text="@string/beer_type"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/addWantTasteButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/abvTextView" />
-
-
-
-    <TextView
-        android:id="@+id/manufacturerTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/beer_manufacturer"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/countryTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/beerNameTextView" />
-
-    <TextView
-        android:id="@+id/countryTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/beer_country"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/abvTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/manufacturerTextView" />
-
-    <TextView
-        android:id="@+id/abvTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/beer_abv"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/typeTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/countryTextView" />
 
     <Button
         android:id="@+id/addWantTasteButton"
@@ -92,8 +87,8 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/addTastedButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/addTastedButton" />
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/addTastedButton"
@@ -106,6 +101,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toEndOf="@+id/addWantTasteButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

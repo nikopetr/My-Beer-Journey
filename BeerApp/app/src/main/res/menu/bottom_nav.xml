@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeItem"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/home_item_string"/>
+        android:id="@+id/beerCatalogItem"
+        android:icon="@drawable/ic_content_paste_black_24dp"
+        android:title="@string/beer_Catalog_item_string"/>
 
     <item
-        android:id="@+id/dashBoardItem"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/dashboard_item_string"/>
+        android:id="@+id/myBeerListItem"
+        android:icon="@drawable/ic_view_list_black_24dp"
+        android:title="@string/my_beer_list_item_string"/>
+
+    <item
+        android:id="@+id/drinkSessionsItem"
+        android:icon="@drawable/ic_local_drink_black_24dp"
+        android:title="@string/drink_sessions_item_string"/>
+
     <item
         android:id="@+id/settingsItem"
         android:icon="@drawable/ic_settings_black_24dp"
