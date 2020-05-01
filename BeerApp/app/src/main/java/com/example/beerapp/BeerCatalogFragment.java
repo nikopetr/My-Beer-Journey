@@ -40,12 +40,14 @@ public class BeerCatalogFragment extends SerializableFragment {
         View fragmentView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
         ListView beerListView = fragmentView.findViewById(R.id.beerListView);
+
+        //Array adapter for the beer list
         final BeerArrayAdapter beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList); // Array adapter for the beer list
         beerListView.setAdapter(beerListArrayAdapter);
         beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                seeBeerDetailsScreen(null);
+                seeBeerDetailsScreen(beerList.get(position));
             }
         });
 
@@ -70,13 +72,13 @@ public class BeerCatalogFragment extends SerializableFragment {
     }
 
 
-    void seeBeerDetailsScreen(View view)
+    // Method for creating intent and passing the Beer object to the new activity
+    private void seeBeerDetailsScreen(Beer beerSelected)
     {
         //Create the Intent to start the SayHelloNewScreen Activity
         Intent intent = new Intent(getContext(), BeerDetailsActivity.class);
         //Pass data to the SayHelloNewScreen Activity through the Intent
-        Beer testBeer = new Beer("KEOTEST",R.drawable.ic_local_drink_black_24dp);
-        intent.putExtra("selectedBeer", testBeer);
+        intent.putExtra("selectedBeer", beerSelected);
         //Ask Android to start the new Activity
         startActivity(intent);
 
