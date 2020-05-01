@@ -8,7 +8,7 @@
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/statsConstraintLayout"
+        android:id="@+id/drinkSessionFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.2">
@@ -49,15 +49,27 @@
                 android:id="@+id/beerConsumedTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:text="@string/total_beer_consumed" />
+
+            <TextView
+                android:id="@+id/beerConsumedNumberTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7" />
 
             <TextView
                 android:id="@+id/totalTimeSpentTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:text="@string/total_time_spent_drinking" />
+
+            <TextView
+                android:id="@+id/totalTimeSpentNumberTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7" />
 
             <TextView
                 android:id="@+id/mostBeerConsumedTextView"
@@ -120,18 +132,37 @@
             <TextView
                 android:id="@+id/timeDrinkingTextView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:enabled="false"
                 android:text="@string/time_drinking" />
+
+            <Chronometer
+                android:id="@+id/sessionChronometer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:countDown="false"
+                android:enabled="false"
+                android:layout_gravity="center"/>
+
 
             <TextView
                 android:id="@+id/beerDrankTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:enabled="false"
                 android:text="@string/total_beer_drank_number" />
+
+            <TextView
+                android:id="@+id/litresDrankTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:ems="10"
+                android:enabled="false"
+                android:text="0 L"/>
 
         </LinearLayout>
 

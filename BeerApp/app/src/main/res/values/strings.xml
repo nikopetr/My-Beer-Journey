@@ -26,9 +26,9 @@
     <string name="most_beer_consumed_in_a_session">Most beer consumed in a session:</string>
     <string name="drink_session">Drink Session</string>
     <string name="start_session">START SESSION</string>
-    <string name="stop_session">STOP</string>
+    <string name="stop_session">STOP SESSION</string>
     <string name="time_drinking">Time drinking:</string>
-    <string name="total_beer_drank_number">Total beer drank: number</string>
+    <string name="total_beer_drank_number">Total beer drank:</string>
     <string name="add_a_half_pint">Add a half pint</string>
     <string name="add_a_pint">Add a pint</string>
 </resources>
