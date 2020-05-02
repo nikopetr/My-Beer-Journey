@@ -12,13 +12,12 @@ import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
-
+// Fragment used for displaying user's drinking stats, and for having a new drink session
 public class DrinkSessionsFragment extends SerializableFragment {
 
-    private final double PINT_TO_LITRE = 0.5;
-    private final double HALF_PINT_TO_LITRE = 0.3;
+    private static final double PINT_TO_LITRE = 0.5;
+    private static final double HALF_PINT_TO_LITRE = 0.3;
 
-    // Initialize variables
     private double litresDrank;
     private boolean isDrinking;
     private long timePassed;
@@ -47,47 +46,48 @@ public class DrinkSessionsFragment extends SerializableFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
         // Initialize variables
-        isDrinking = false;
-        totalLitresDrank = 0;
-        litresDrank = 0;
-        timePassed = 0;
-        // Find the START/STOP SESSION button and set the onClick functions to be called
+        this.isDrinking = false;
+        this.totalLitresDrank = 0;
+        this.litresDrank = 0;
+        this.timePassed = 0;
+        // Initialize the START/STOP SESSION button and set the onClick methods to be called
         sessionButton = rootView.findViewById(R.id.startSessionButton);
         sessionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
+                // If the user is drinking then we stop the session, otherwise a session starts
                 if (isDrinking)
-                    stopSession();
+                    stopDrinkSession();
                 else
-                    startSession();
+                    startDrinkSession();
             }
         });
-        // Find the chronometer
+        // Initialize the chronometer
         sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
-        // Find the textView to get bold when session is started
+        // Find the textView, in order to get bold when session is started
         sessionText = rootView.findViewById(R.id.timeDrinkingTextView);
 
-        // Find and initialize the ADD PINT button
+        // Initialize and set on click method to the ADD PINT button
         addPint = rootView.findViewById(R.id.addPintButton);
         addPint.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 addBeer(false);
             }
         });
-        // Find and initialize the ADD HALF PINT button
+        // Initialize and set on click method to the ADD HALF PINT button
         addHalfPint = rootView.findViewById(R.id.addHalfPintButton);
         addHalfPint.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 addBeer(true);
             }
         });
-        // Find the text views for litres drank
+        // Initialize the text views for litres drank
         beerText = rootView.findViewById(R.id.beerDrankTextView);
         beerNumber = rootView.findViewById(R.id.litresDrankTextView);
 
-        // Find the text views for the stats
+        // Initialize the text views for the stats
         totalBeerConsumed = rootView.findViewById(R.id.beerConsumedNumberTextView);
         totalTime = rootView.findViewById(R.id.totalTimeSpentNumberTextView);
 
@@ -98,8 +98,8 @@ public class DrinkSessionsFragment extends SerializableFragment {
 
 
 
-    // This function is called when the button START SESSION is pressed to start the chronometer
-    private void startSession() {
+    // Method called when the button START SESSION is pressed to start the chronometer and enable the view components
+    private void startDrinkSession() {
         // Reset the chronometer
         sessionChronometer.setBase(SystemClock.elapsedRealtime());
         // Start the chronometer
@@ -122,8 +122,9 @@ public class DrinkSessionsFragment extends SerializableFragment {
         isDrinking = true;
     }
 
-    // This function is called when the button STOP SESSION is pressed to stop the chronometer
-    private void stopSession() {
+    // Method called when the button STOP SESSION is pressed to stop the chronometer,
+    // save(update) the current's drink session outcomes and disable the view components
+    private void stopDrinkSession() {
         // Save the values to variables to be stored in the DB
         litresDrank += totalLitresDrank;
 
@@ -136,7 +137,7 @@ public class DrinkSessionsFragment extends SerializableFragment {
         long seconds = TimeUnit.SECONDS.toSeconds(timePassed) - (TimeUnit.SECONDS.toMinutes(timePassed) *60);
 
 
-        // Reset the variables
+        // Reset the variables' values
         sessionChronometer.setBase(SystemClock.elapsedRealtime());
         totalLitresDrank = 0;
         // Stop the chronometer
@@ -158,7 +159,7 @@ public class DrinkSessionsFragment extends SerializableFragment {
         addPint.setEnabled(false);
 
         // Update the stats
-        totalBeerConsumed.setText(String.format(" %.2f L", litresDrank));
+        totalBeerConsumed.setText(String.format(getString(R.string.litres_format_string), litresDrank));
         // Set the correct endings in word
         String totalTimeString = "";
         // For days
@@ -187,13 +188,13 @@ public class DrinkSessionsFragment extends SerializableFragment {
     }
 
 
-    // This function is called to add half or a pint of beer
+    // Method called to add half or a pint of beer
     private void addBeer(boolean isHalf) {
         if (isHalf)
             totalLitresDrank += HALF_PINT_TO_LITRE;
         else
             totalLitresDrank += PINT_TO_LITRE;
-        beerNumber.setText(String.format("%.2f L", totalLitresDrank));
+        beerNumber.setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
 
     }
 }

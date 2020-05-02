@@ -18,7 +18,7 @@
     <string name="beer_image_caption">Beer Image</string>
 
 
-    <!--  Strings for fragment_drink_sessions -->
+    <!-- Strings for fragment_drink_sessions -->
     <string name="my_stats">My Stats</string>
     <string name="different_beers_tasted">Different beers tasted:</string>
     <string name="total_beer_consumed">Total beer consumed:</string>
@@ -31,4 +31,8 @@
     <string name="total_beer_drank_number">Total beer drank:</string>
     <string name="add_a_half_pint">Add a half pint</string>
     <string name="add_a_pint">Add a pint</string>
+    <string name="litres_drank_init_text">0 L</string>
+
+    <!-- String used for DrinkSessionsFragment  -->
+    <string name="litres_format_string">%.2f L</string>
 </resources>

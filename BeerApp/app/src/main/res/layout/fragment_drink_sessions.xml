@@ -162,7 +162,7 @@
                 android:layout_weight="0.5"
                 android:ems="10"
                 android:enabled="false"
-                android:text="0 L"/>
+                android:text="@string/litres_drank_init_text"/>
 
         </LinearLayout>
 
