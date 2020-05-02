@@ -1,7 +1,5 @@
 package com.example.beerapp;
 
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,20 +11,18 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 
-import java.util.ArrayList;
+import androidx.fragment.app.Fragment;
 import java.util.List;
 import java.util.Objects;
 
 
-public class BeerCatalogFragment extends SerializableFragment {
+public class BeerCatalogFragment extends Fragment {
 
 //    private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> beerList;
 
     public BeerCatalogFragment() {
         //Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
-
-
 
 //        beerList.add(new Beer("keo", R.drawable.ic_local_drink_black_24dp));
 //        beerList.add(new Beer("alfa", R.drawable.ic_local_drink_black_24dp));

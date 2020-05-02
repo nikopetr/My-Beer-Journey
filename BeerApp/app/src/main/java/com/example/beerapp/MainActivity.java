@@ -13,7 +13,6 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,16 +47,11 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
         if (savedInstanceState != null){
-           //Retrieve data from the Bundle and restore the dynamic state of the UI
-//            currentFragment =  (SerializableFragment)savedInstanceState.getSerializable("fragmentSaved");
+           // Retrieve data from the Bundle and restore the dynamic state of the UI
             actionBar.setTitle(savedInstanceState.getCharSequence("actonBarTitleSaved"));
-            Fragment lastFragment = getSupportFragmentManager().getFragment(savedInstanceState,BEER_CATALOG_TITLE);
-           // fragmentManager.beginTransaction().hide(Objects.requireNonNull(getCurrentFragment())).commit();
-
-            getSupportFragmentManager().beginTransaction().show(Objects.requireNonNull(lastFragment)).commit();
         }
         else {
-            //Initialize the UI
+            // Initialize the UI
             actionBar.setTitle(BEER_CATALOG_TITLE); // Changes the title of the toolbar
             getSupportFragmentManager().beginTransaction().add(R.id.container, new BeerCatalogFragment(), BEER_CATALOG_TITLE).commit();
         }
@@ -69,15 +63,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save which fragment was loaded to the Bundle and the current title of the action bar
-        //outState.putSerializable("fragmentSaved",(SerializableFragment)getCurrentFragment());
-        // Save the fragments of the fragment manager to the Bundle
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        for(Fragment fragment : fragments)
-            if(fragment != null && fragment.getTag() != null)
-                getSupportFragmentManager().putFragment(outState, fragment.getTag(), fragment);
-
+        // Saves which fragment was loaded  for title of the action bar after it loads  back
         outState.putCharSequence("actonBarTitleSaved",actionBar.getTitle());
     }
 
@@ -86,12 +72,26 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // Method called to load the given fragment
-    private void loadFragment(Fragment fragment) {
+    // Method called to show an existing fragment, found by it's tag and transact to it
+    private void showFragment(String fragmentTag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment);
+        // Hiding the current visible fragment
+        transaction.hide(Objects.requireNonNull(getCurrentFragment()));
+        transaction.show(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(fragmentTag)));
         transaction.addToBackStack(null);
         transaction.commit();
+        actionBar.setTitle(fragmentTag);
+    }
+
+    // Method called to add a fragment to the manager and transact to it
+    private void addFragment(Fragment fragment, String fragmentTag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        // Hiding the current visible fragment
+        transaction.hide(Objects.requireNonNull(getCurrentFragment()));
+        transaction.add(R.id.container, fragment, fragmentTag);
+        transaction.addToBackStack(null);
+        transaction.commit();
+        actionBar.setTitle(fragmentTag);
     }
 
     // Method used for transitioning from one fragment to another without recreating the previous fragment
@@ -99,56 +99,37 @@ public class MainActivity extends AppCompatActivity {
     private boolean fragmentTransition (int selectedItemId) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        // Hiding the current visible fragment
-        transaction.hide(Objects.requireNonNull(getCurrentFragment()));
 
         switch (selectedItemId) {
             case R.id.beerCatalogItem:
                 if (fragmentManager.findFragmentByTag(BEER_CATALOG_TITLE) != null) {
                     // If a BeerCatalogFragment already exists, show it.
-                    transaction.show(Objects.requireNonNull(fragmentManager.findFragmentByTag(BEER_CATALOG_TITLE)));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    showFragment(BEER_CATALOG_TITLE);
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    transaction.add(R.id.container, new BeerCatalogFragment(), BEER_CATALOG_TITLE);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    addFragment(new BeerCatalogFragment(), BEER_CATALOG_TITLE);
                 }
-                actionBar.setTitle(BEER_CATALOG_TITLE);
                 return true;
             case R.id.drinkSessionsItem:
                 if (fragmentManager.findFragmentByTag(DRINK_SESSIONS_TITLE) != null) {
                     // If a DrinkSessionsFragment already exists, show it.
-                    transaction.show(Objects.requireNonNull(fragmentManager.findFragmentByTag(DRINK_SESSIONS_TITLE)));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    showFragment(DRINK_SESSIONS_TITLE);
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    transaction.add(R.id.container, new DrinkSessionsFragment(), DRINK_SESSIONS_TITLE);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    addFragment(new DrinkSessionsFragment(), DRINK_SESSIONS_TITLE);
                 }
-                actionBar.setTitle(DRINK_SESSIONS_TITLE);
                 return true;
             case R.id.settingsItem:
                 if (fragmentManager.findFragmentByTag(SETTINGS_TITLE) != null) {
                     // If the fragment already exists, show it.
-                    transaction.show(Objects.requireNonNull(fragmentManager.findFragmentByTag(SETTINGS_TITLE)));
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    showFragment((SETTINGS_TITLE));
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    transaction.add(R.id.container, new SettingsFragment(), SETTINGS_TITLE);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    addFragment(new SettingsFragment(), SETTINGS_TITLE);
                 }
-                actionBar.setTitle(SETTINGS_TITLE);
                 return true;
         }
         return false;
@@ -172,6 +153,4 @@ public class MainActivity extends AppCompatActivity {
         else
             super.onBackPressed();
     }
-
-
 }
