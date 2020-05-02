@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import java.util.concurrent.TimeUnit;
 
 // Fragment used for displaying user's drinking stats, and for having a new drink session
@@ -41,8 +43,7 @@ public class DrinkSessionsFragment extends SerializableFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
         // Initialize variables

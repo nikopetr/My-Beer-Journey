@@ -24,7 +24,7 @@ public class BeerCatalogFragment extends SerializableFragment {
     private List<Beer> beerList;
 
     public BeerCatalogFragment() {
-        Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
+        //Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
 
 
 
