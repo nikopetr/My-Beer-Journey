@@ -42,8 +42,14 @@
                 android:id="@+id/differentBeersTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:text="@string/different_beers_tasted" />
+
+            <TextView
+                android:id="@+id/totalBeersTastedTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7" />
 
             <TextView
                 android:id="@+id/beerConsumedTextView"
@@ -75,8 +81,14 @@
                 android:id="@+id/mostBeerConsumedTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.3"
                 android:text="@string/most_beer_consumed_in_a_session" />
+
+            <TextView
+                android:id="@+id/bestSessionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7" />
 
         </LinearLayout>
 
@@ -162,7 +174,7 @@
                 android:layout_weight="0.5"
                 android:ems="10"
                 android:enabled="false"
-                android:text="@string/litres_drank_init_text"/>
+                android:text="0 L"/>
 
         </LinearLayout>
 

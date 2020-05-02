@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 // Fragment used for displaying user's drinking stats, and for having a new drink session
@@ -20,7 +23,11 @@ public class DrinkSessionsFragment extends SerializableFragment {
     private static final double PINT_TO_LITRE = 0.5;
     private static final double HALF_PINT_TO_LITRE = 0.3;
 
-    private double litresDrank;
+    //Initialize the view
+    private View rootView;
+    // Database
+    private DBHandler dbHandler;
+    // Initialize variables
     private boolean isDrinking;
     private long timePassed;
     // Components about the first half of the Drink Session
@@ -34,8 +41,10 @@ public class DrinkSessionsFragment extends SerializableFragment {
     private TextView beerNumber;
     private double totalLitresDrank;
     // Stats components
-    private TextView totalBeerConsumed;
-    private TextView totalTime;
+    private TextView differentBeersTextView;
+    private TextView totalBeerConsumedTextView;
+    private TextView totalTimeTextView;
+    private TextView bestSessionTextView;
 
 
     public DrinkSessionsFragment() {
@@ -44,23 +53,31 @@ public class DrinkSessionsFragment extends SerializableFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
 
-        View rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
+        // Inflate the layout for this fragment
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Initialize the db
+        dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
         // Initialize variables
         this.isDrinking = false;
         this.totalLitresDrank = 0;
-        this.litresDrank = 0;
         this.timePassed = 0;
-        // Initialize the START/STOP SESSION button and set the onClick methods to be called
+        // Find the START/STOP SESSION button and set the onClick functions to be called
         sessionButton = rootView.findViewById(R.id.startSessionButton);
         sessionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 // If the user is drinking then we stop the session, otherwise a session starts
                 if (isDrinking)
-                    stopDrinkSession();
+                    stopSession();
                 else
-                    startDrinkSession();
+                    startSession();
             }
         });
         // Initialize the chronometer
@@ -72,7 +89,7 @@ public class DrinkSessionsFragment extends SerializableFragment {
         addPint = rootView.findViewById(R.id.addPintButton);
         addPint.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 addBeer(false);
             }
         });
@@ -80,7 +97,7 @@ public class DrinkSessionsFragment extends SerializableFragment {
         addHalfPint = rootView.findViewById(R.id.addHalfPintButton);
         addHalfPint.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 addBeer(true);
             }
         });
@@ -89,18 +106,23 @@ public class DrinkSessionsFragment extends SerializableFragment {
         beerNumber = rootView.findViewById(R.id.litresDrankTextView);
 
         // Initialize the text views for the stats
-        totalBeerConsumed = rootView.findViewById(R.id.beerConsumedNumberTextView);
-        totalTime = rootView.findViewById(R.id.totalTimeSpentNumberTextView);
+        // Initialize different beers consumed text
+        differentBeersTextView = rootView.findViewById(R.id.totalBeersTastedTextView);
+        differentBeersTextView.setText(String.valueOf(dbHandler.getTotalTastedBeers()));
+        // Initialize total beer consumed text
+        totalBeerConsumedTextView = rootView.findViewById(R.id.beerConsumedNumberTextView);
+        totalBeerConsumedTextView.setText(String.format(" %.2f L", dbHandler.getTotalLitres()));
+        // Initialize the time text
+        totalTimeTextView = rootView.findViewById(R.id.totalTimeSpentNumberTextView);
+        totalTimeTextView.setText(timeConvert());
+        // Initialize the best session text
+        bestSessionTextView = rootView.findViewById(R.id.bestSessionTextView);
+        bestSessionTextView.setText(String.format(" %.2f L", dbHandler.getBestSession()));
 
-
-        // Inflate the layout for this fragment
-        return rootView;
     }
 
-
-
     // Method called when the button START SESSION is pressed to start the chronometer and enable the view components
-    private void startDrinkSession() {
+    private void startSession() {
         // Reset the chronometer
         sessionChronometer.setBase(SystemClock.elapsedRealtime());
         // Start the chronometer
@@ -125,18 +147,18 @@ public class DrinkSessionsFragment extends SerializableFragment {
 
     // Method called when the button STOP SESSION is pressed to stop the chronometer,
     // save(update) the current's drink session outcomes and disable the view components
-    private void stopDrinkSession() {
+    private void stopSession() {
         // Save the values to variables to be stored in the DB
-        litresDrank += totalLitresDrank;
+        dbHandler.addLitres(totalLitresDrank);
 
+        // Time elapsed in seconds
         long elapsedMillis = SystemClock.elapsedRealtime() - sessionChronometer.getBase();
-        timePassed += elapsedMillis / 1000;
-        // Convert time to days, hours, minutes, seconds
-        int days = (int) TimeUnit.SECONDS.toDays(timePassed);
-        long hours = TimeUnit.SECONDS.toHours(timePassed) - (days *24);
-        long minutes = TimeUnit.SECONDS.toMinutes(timePassed) - (TimeUnit.SECONDS.toHours(timePassed)* 60);
-        long seconds = TimeUnit.SECONDS.toSeconds(timePassed) - (TimeUnit.SECONDS.toMinutes(timePassed) *60);
+        timePassed = elapsedMillis / 1000;
+        // Add the time to the DB
+        dbHandler.addSessionTime(timePassed);
 
+        // Add the session's litres in the DB if it is the best session
+        dbHandler.bestSession(totalLitresDrank);
 
         // Reset the variables' values
         sessionChronometer.setBase(SystemClock.elapsedRealtime());
@@ -160,42 +182,62 @@ public class DrinkSessionsFragment extends SerializableFragment {
         addPint.setEnabled(false);
 
         // Update the stats
-        totalBeerConsumed.setText(String.format(getString(R.string.litres_format_string), litresDrank));
-        // Set the correct endings in word
-        String totalTimeString = "";
-        // For days
-        if (days == 1)
-            totalTimeString += days + " day ";
-        else if (days > 1)
-            totalTimeString += days + " days ";
-        // For hours
-        if (hours == 1)
-            totalTimeString += hours + " hour ";
-        else
-            totalTimeString += hours + " hours ";
-        // For minutes
-        if (minutes == 1)
-            totalTimeString += minutes + " minute ";
-        else
-            totalTimeString += minutes + " minutes ";
-        // For seconds
-        if (seconds == 1)
-            totalTimeString += seconds + " second";
-        else
-            totalTimeString += seconds + " seconds";
-        totalTime.setText(totalTimeString);
+        // Update total litres text
+        totalBeerConsumedTextView.setText(String.format(" %.2f L", dbHandler.getTotalLitres()));
+        // Update the time text
+        totalTimeTextView.setText(timeConvert());
+        // Update best session text
+        bestSessionTextView.setText(String.format(" %.2f L", dbHandler.getBestSession()));
 
         isDrinking = false;
     }
 
 
-    // Method called to add half or a pint of beer
+    // This function is called to add half or a pint of beer
     private void addBeer(boolean isHalf) {
         if (isHalf)
             totalLitresDrank += HALF_PINT_TO_LITRE;
         else
             totalLitresDrank += PINT_TO_LITRE;
-        beerNumber.setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
+        beerNumber.setText(String.format("%.2f L", totalLitresDrank));
 
+    }
+
+    // This function is used to convert time from seconds to days, hours, minutes and seconds
+    // The time that is converted is the total time from the DB
+    // Return a string with the correct format of the time
+    private String timeConvert() {
+        // Initialize the string
+        String timeString = "";
+        // Get the total time in seconds
+        long totalTimePassed = dbHandler.getTotalTime();
+        // Convert total time to days, hours, minutes and seconds
+        int days = (int) TimeUnit.SECONDS.toDays(totalTimePassed);
+        long hours = TimeUnit.SECONDS.toHours(totalTimePassed) - (days *24);
+        long minutes = TimeUnit.SECONDS.toMinutes(totalTimePassed) - (TimeUnit.SECONDS.toHours(totalTimePassed)* 60);
+        long seconds = TimeUnit.SECONDS.toSeconds(totalTimePassed) - (TimeUnit.SECONDS.toMinutes(totalTimePassed) *60);
+        // Create the string
+        // For days
+        if (days == 1)
+            timeString += days + " day ";
+        else if (days > 1)
+            timeString += days + " days ";
+        // For hours
+        if (hours == 1)
+            timeString += hours + " hour ";
+        else
+            timeString += hours + " hours ";
+        // For minutes
+        if (minutes == 1)
+            timeString += minutes + " minute ";
+        else
+            timeString += minutes + " minutes ";
+        // For seconds
+        if (seconds == 1)
+            timeString += seconds + " second";
+        else
+            timeString += seconds + " seconds";
+
+        return timeString;
     }
 }
