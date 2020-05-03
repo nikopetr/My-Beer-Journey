@@ -11,23 +11,23 @@
         android:id="@+id/drinkSessionFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.2">
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/myStatsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:text="@string/my_stats"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -35,62 +35,105 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/myStatsTextView">
+            app:layout_constraintTop_toBottomOf="@+id/myStatsTextView"
+            app:layout_constraintVertical_bias="0.16">
 
             <TextView
                 android:id="@+id/differentBeersTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.3"
-                android:text="@string/different_beers_tasted" />
+                android:text="@string/different_beers_tasted"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/totalBeersTastedTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.7"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/differentBeersTextView" />
 
             <TextView
                 android:id="@+id/beerConsumedTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="16dp"
                 android:layout_weight="0.3"
-                android:text="@string/total_beer_consumed" />
+                android:text="@string/total_beer_consumed"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/totalBeersTastedTextView" />
 
             <TextView
                 android:id="@+id/beerConsumedNumberTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.7"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/beerConsumedTextView" />
 
             <TextView
                 android:id="@+id/totalTimeSpentTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="16dp"
                 android:layout_weight="0.3"
-                android:text="@string/total_time_spent_drinking" />
+                android:text="@string/total_time_spent_drinking"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/beerConsumedNumberTextView" />
 
             <TextView
                 android:id="@+id/totalTimeSpentNumberTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.7"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/totalTimeSpentTextView" />
 
             <TextView
                 android:id="@+id/mostBeerConsumedTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="16dp"
                 android:layout_weight="0.3"
-                android:text="@string/most_beer_consumed_in_a_session" />
+                android:text="@string/most_beer_consumed_in_a_session"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/totalTimeSpentNumberTextView" />
 
             <TextView
                 android:id="@+id/bestSessionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.7" />
+                android:layout_weight="0.7"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mostBeerConsumedTextView" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -124,10 +167,11 @@
             android:text="@string/start_session"
             app:layout_constraintBottom_toTopOf="@+id/sessionLinearLayout"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toEndOf="@+id/sessionTextView"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/sessionLinearLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -141,41 +185,62 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sessionTextView">
 
+
             <TextView
                 android:id="@+id/timeDrinkingTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_weight="0.5"
                 android:enabled="false"
-                android:text="@string/time_drinking" />
+                android:text="@string/time_drinking"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Chronometer
                 android:id="@+id/sessionChronometer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:layout_gravity="center"/>
-
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timeDrinkingTextView" />
 
             <TextView
                 android:id="@+id/beerDrankTextView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="24dp"
                 android:layout_weight="0.5"
                 android:enabled="false"
-                android:text="@string/total_beer_drank_number" />
+                android:text="@string/total_beer_drank_number"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sessionChronometer" />
 
             <TextView
                 android:id="@+id/litresDrankTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_weight="0.5"
                 android:ems="10"
                 android:enabled="false"
-                android:text="@string/litres_drank_init_text"/>
+                android:text="@string/litres_drank_init_text"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/beerDrankTextView"
+                tools:layout_editor_absoluteX="0dp" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/addPintButton"
