@@ -175,40 +175,30 @@ public class DrinkSessionsFragment extends Fragment {
     private void stopDrinkSession() {
         String logMessageTag = "Database Interaction";
         // Save the values to variables to be stored in the DB
-        if (dbHandler.addLitres(totalLitresDrank))
-        {
-            // Time elapsed in millis
-            long elapsedMillis = SystemClock.elapsedRealtime() - sessionChronometer.getBase();
-            // Save the time of the session (in seconds) to the DB
-            if (dbHandler.addSessionTime(elapsedMillis / 1000))
-            {
-                // Save the session's litres in the DB if it is the best session
-                if(totalLitresDrank > dbHandler.getBestSession())
-                {
-                    if (dbHandler.updateBestSession(totalLitresDrank))
-                    {
-                        // Reset the variables' values
-                        sessionChronometer.setBase(SystemClock.elapsedRealtime());
-                        totalLitresDrank = 0;
-                        // Stop the chronometer
-                        sessionChronometer.stop();
-
-                        disableSessionComponents();
-
-                        // Update the stats
-                        updateStats();
-
-                        this.isDrinking = false;
-                    }
-                    else
-                        Log.i(logMessageTag, "Could not save best session to the DB");
-                }
-            }
-            else
-                Log.i(logMessageTag, "Could not save session's time to the DB");
-        }
-        else
+        if (!dbHandler.addLitres(totalLitresDrank))
             Log.i(logMessageTag, "Could not save session's litres to the DB");
+        // Time elapsed in millis
+        long elapsedMillis = SystemClock.elapsedRealtime() - sessionChronometer.getBase();
+        // Save the time of the session (in seconds) to the DB
+        if (!dbHandler.addSessionTime(elapsedMillis / 1000))
+            Log.i(logMessageTag, "Could not save session's time to the DB");
+        // Save the session's litres in the DB if it is the best session
+        if(totalLitresDrank > dbHandler.getBestSession())
+            if(!dbHandler.updateBestSession(totalLitresDrank))
+                Log.i(logMessageTag, "Could not save best session to the DB");
+
+        // Reset the variables' values
+        sessionChronometer.setBase(SystemClock.elapsedRealtime());
+        totalLitresDrank = 0;
+        // Stop the chronometer
+        sessionChronometer.stop();
+
+        disableSessionComponents();
+
+        // Update the stats
+        updateStats();
+
+        this.isDrinking = false;
     }
 
     // Method called to add half or a pint of beer
