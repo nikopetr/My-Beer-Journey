@@ -35,4 +35,10 @@
 
     <!-- String used for DrinkSessionsFragment  -->
     <string name="litres_format_string">%.2f L</string>
+
+    <!-- Strings for fragment_settings  -->
+    <string name="reset_text">If you want to restart your beer journey\nclick the button below:</string>
+    <string name="reset_button">START OVER</string>
+    <string name="reset_stats_text">If you only want to reset your litres consumed\nand your times click the button below:</string>
+    <string name="reset_stats_button">RESET STATS</string>
 </resources>

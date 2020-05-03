@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,8 +152,6 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             double alreadyDrankLitres = cursor.getDouble(2);
-            Log.d("Already Drank Litres", String.format("%.2f L", alreadyDrankLitres));
-            Log.d("Litres to add", String.format("%.2f L", litres));
             alreadyDrankLitres += litres;
             ContentValues litresUpdate = new ContentValues();
             litresUpdate.put(COLUMN_LITRES_CONSUMED, alreadyDrankLitres);
@@ -170,8 +171,6 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             long alreadyTimeSpentDrinking = cursor.getLong(3);
-            Log.d("Already Time", String.valueOf(alreadyTimeSpentDrinking));
-            Log.d("Time to add", String.valueOf(timeSpentDrinking));
             alreadyTimeSpentDrinking += timeSpentDrinking;
             ContentValues timeUpdate = new ContentValues();
             timeUpdate.put(COLUMN_TOTAL_TIME, alreadyTimeSpentDrinking);
@@ -248,6 +247,25 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return 0.0;
+    }
+
+    // Reset the whole journey
+    public void resetJourney() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_BEERS_TASTED, 0);
+        db.update(TABLE_USER, cv, null, null);
+        resetStats();
+    }
+
+    // Reset everything except different beers tasted
+    public void resetStats() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_LITRES_CONSUMED, 0);
+        cv.put(COLUMN_TOTAL_TIME, 0);
+        cv.put(COLUMN_BEST_SESSION, 0);
+        db.update(TABLE_USER, cv, null, null);
     }
 
 }

@@ -192,12 +192,7 @@ public class DrinkSessionsFragment extends Fragment {
         disableSessionComponents();
 
         // Update the stats
-        // Update total litres text
-        ((TextView)rootView.findViewById(R.id.beerConsumedNumberTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getTotalLitres()));
-        // Update the time text
-        ((TextView)rootView.findViewById(R.id.totalTimeSpentNumberTextView)).setText(getConvertedTime());
-        // Update best session text
-        ((TextView)rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
+        updateStats();
 
         this.isDrinking = false;
     }
@@ -248,5 +243,20 @@ public class DrinkSessionsFragment extends Fragment {
             timeString += seconds + " seconds";
 
         return timeString;
+    }
+
+    // Function for resetting the text values of the session's section
+    // This function is called when the STOP SESSION button is pressed to update the stats with the new values
+    // Might need to call this function when resetting the stats or the journey from settings section
+    public void updateStats() {
+        if (dbHandler != null) {
+            // Update the stats
+            // Update total litres text
+            ((TextView) rootView.findViewById(R.id.beerConsumedNumberTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getTotalLitres()));
+            // Update the time text
+            ((TextView) rootView.findViewById(R.id.totalTimeSpentNumberTextView)).setText(getConvertedTime());
+            // Update best session text
+            ((TextView) rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
+        }
     }
 }

@@ -113,6 +113,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.drinkSessionsItem:
                 if (fragmentManager.findFragmentByTag(DRINK_SESSIONS_TITLE) != null) {
+                    // Before you show the DrinkSessionsFragment update it's text values in case there was a reset from the user
+                    DrinkSessionsFragment fragment = (DrinkSessionsFragment) getSupportFragmentManager().findFragmentByTag(DRINK_SESSIONS_TITLE);
+                    if (fragment != null) fragment.updateStats();
                     // If a DrinkSessionsFragment already exists, show it.
                     showFragment(DRINK_SESSIONS_TITLE);
                 }
