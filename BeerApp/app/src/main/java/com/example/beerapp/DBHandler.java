@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,45 +36,72 @@ public class DBHandler extends SQLiteOpenHelper {
     // Constructor
     DBHandler(Context context, SQLiteDatabase.CursorFactory factory){
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+
+        final String DB_DESTINATION = "/data/data/com.example.beerapp/databases/beersDB.db";
+
+// Check if the database exists before copying
+        boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
+        if (initialiseDatabase == false) {
+            try{
+                //this.getWritableDatabase();
+                // Open the .db file in your assets directory
+                InputStream is = context.getAssets().open("beersDB.db");
+
+                // Copy the database into the destination
+                OutputStream os = new FileOutputStream(DB_DESTINATION);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = is.read(buffer)) > 0){
+                    os.write(buffer, 0, length);
+                }
+                os.flush();
+
+                os.close();
+                is.close();
+
+            }catch (Exception e){
+
+            }
+        }
     }
 
     // Creates the structure of the DB
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_BEERS_TABLE = "CREATE TABLE " +
-                TABLE_BEERS + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY," +
-                COLUMN_NAME + " TEXT," +
-                COLUMN_MANUFACTURER + " TEXT," +
-                COLUMN_COUNTRY + " TEXT," +
-                COLUMN_ABV + " FLOAT," +
-                COLUMN_TYPE + " TEXT" + ")";
-        db.execSQL(CREATE_BEERS_TABLE);
-
-        String CREATE_USER_TABLE = "CREATE TABLE " +
-                TABLE_USER + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY," +
-                COLUMN_BEERS_TASTED + " INTEGER," +
-                COLUMN_LITRES_CONSUMED + " DOUBLE," +
-                COLUMN_TOTAL_TIME + " BIGINT," +
-                COLUMN_BEST_SESSION + " DOUBLE" + ")";
-        db.execSQL(CREATE_USER_TABLE);
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_BEERS_TASTED, 0);
-        values.put(COLUMN_LITRES_CONSUMED, 0);
-        values.put(COLUMN_TOTAL_TIME, 0);
-        values.put(COLUMN_BEST_SESSION, 0);
-        db.insert(TABLE_USER, null, values);
+//        String CREATE_BEERS_TABLE = "CREATE TABLE " +
+//                TABLE_BEERS + "(" +
+//                COLUMN_ID + " INTEGER PRIMARY KEY," +
+//                COLUMN_NAME + " TEXT," +
+//                COLUMN_MANUFACTURER + " TEXT," +
+//                COLUMN_COUNTRY + " TEXT," +
+//                COLUMN_ABV + " FLOAT," +
+//                COLUMN_TYPE + " TEXT" + ")";
+//        db.execSQL(CREATE_BEERS_TABLE);
+//
+//        String CREATE_USER_TABLE = "CREATE TABLE " +
+//                TABLE_USER + "(" +
+//                COLUMN_ID + " INTEGER PRIMARY KEY," +
+//                COLUMN_BEERS_TASTED + " INTEGER," +
+//                COLUMN_LITRES_CONSUMED + " DOUBLE," +
+//                COLUMN_TOTAL_TIME + " BIGINT," +
+//                COLUMN_BEST_SESSION + " DOUBLE" + ")";
+//        db.execSQL(CREATE_USER_TABLE);
+//
+//        ContentValues values = new ContentValues();
+//        values.put(COLUMN_BEERS_TASTED, 0);
+//        values.put(COLUMN_LITRES_CONSUMED, 0);
+//        values.put(COLUMN_TOTAL_TIME, 0);
+//        values.put(COLUMN_BEST_SESSION, 0);
+//        db.insert(TABLE_USER, null, values);
 
     }
 
     // Upgrades the DB, deleting recreating the DB (since we don't need the method to do anything special)
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BEERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-        onCreate(db);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BEERS);
+//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+//        onCreate(db);
     }
 
     // Method for adding a new Beer to the DB
@@ -128,7 +159,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         List<Beer> beers = new ArrayList<>();
         while (cursor.moveToNext())
-                beers.add(new Beer(cursor.getString(1), R.drawable.ic_local_drink_black_24dp)); // Column 1 contains the name of the beer, image is going to change
+            beers.add(new Beer(cursor.getString(1), R.drawable.ic_local_drink_black_24dp)); // Column 1 contains the name of the beer, image is going to change
         cursor.close();
 //        db.close();
         return beers;
