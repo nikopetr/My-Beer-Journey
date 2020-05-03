@@ -14,49 +14,52 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+// Class used for the settings fragments.
+// Shows useful information about the application and has reset data options
 public class SettingsFragment extends Fragment {
 
-    private List<String> listDataHeader;
-    private HashMap<String, List<String>> listHash;
+    private List<String> listDataHeader; // List used for the data headers
+    private HashMap<String, List<String>> listHash;  // Hash map used to pair the answers with the questions of the FAQ
+    private DBHandler dbHandler; // Database Helper
 
     public SettingsFragment() {
-        // Required empty public constructor
+        // Required empty constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Initialize the view
+        // Initialize the root view
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        // Initialize the db
-        final DBHandler dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
+        // Initialize the db handler
+        dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
 
-        // Initialize the button variables
+        // Initialize the buttons
         Button resetJourneyButton;
-        Button resetStatsButton;
         // Find the Reset Journey button and set the onClick function to be called
         resetJourneyButton = rootView.findViewById(R.id.resetJourneyButton);
         resetJourneyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // If the user wants to reset everything
-                dbHandler.resetJourney();
+                dbHandler.resetUserData();
             }
         });
 
+        Button resetStatsButton;
         // Find the Reset Stats button and set the onClick functions to be called
         resetStatsButton = rootView.findViewById(R.id.resetStatsButton);
         resetStatsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // If the user wants to only reset the stats but not the different tasted beers
-                dbHandler.resetStats();
+                dbHandler.resetUserStats();
             }
         });
 
         // Initialize the expandable list view
-        ExpandableListView listView = (ExpandableListView)rootView.findViewById(R.id.expandableFAQList);
+        ExpandableListView listView = rootView.findViewById(R.id.expandableFAQList);
         initData();
         ExpandableListAdapter listAdapter = new ExpandableListAdapter(rootView.getContext(), listDataHeader, listHash);
         listView.setAdapter(listAdapter);

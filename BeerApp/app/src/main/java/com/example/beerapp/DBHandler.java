@@ -5,10 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +22,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_COUNTRY = "country";
     private static final String COLUMN_ABV = "abv";
     private static final String COLUMN_TYPE = "type";
-    // For users table
+    // For user table
     private static final String TABLE_USER = "user";
     private static final String COLUMN_BEERS_TASTED = "tasted";
     private static final String COLUMN_LITRES_CONSUMED = "litres";
@@ -34,7 +30,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_BEST_SESSION = "best_session";
 
     // Constructor
-    public DBHandler(Context context, SQLiteDatabase.CursorFactory factory){
+    DBHandler(Context context, SQLiteDatabase.CursorFactory factory){
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
@@ -138,15 +134,16 @@ public class DBHandler extends SQLiteOpenHelper {
         return beers;
     }
 
-    // These functions are about the My Stats fragment
+    // Methods used in the My Stats fragment
     // Add new tasted beer
+    // TODO
     public boolean addTastedBeer() {
-        // TO DO
         return true;
     }
 
     // Add session's litres to the DB
-    public boolean addLitres(double litres) {
+    // Returns true if the session's litres were successfully saved in the user DB
+    boolean addLitres(double litres) {
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -163,9 +160,9 @@ public class DBHandler extends SQLiteOpenHelper {
         return false;
     }
 
-    // Add session's time to the DB
-    // The time is in seconds
-    public boolean addSessionTime(long timeSpentDrinking) {
+    // Add session's time in seconds to the DB
+    // Returns true if the session's time was successfully saved in the user DB
+    boolean addSessionTime(long timeSpentDrinking) {
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -182,18 +179,27 @@ public class DBHandler extends SQLiteOpenHelper {
         return false;
     }
 
-    // Add best session
-    public boolean bestSession(double currentSession) {
+    // Return the most amount of beer drank by the user in time
+    double getBestSession() {
+        double bestSession = 0.0;
+        String query = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst())
+            bestSession = cursor.getDouble(4);
+        cursor.close();
+        return bestSession;
+    }
+
+    // Updates the best session
+    boolean updateBestSession(double currentSession) {
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            double bestSession = cursor.getDouble(4);
-            if (currentSession > bestSession) {
-                ContentValues bestSessionUpdate = new ContentValues();
-                bestSessionUpdate.put(COLUMN_BEST_SESSION, currentSession);
-                db.update(TABLE_USER, bestSessionUpdate, null, null);
-            }
+            ContentValues bestSessionUpdate = new ContentValues();
+            bestSessionUpdate.put(COLUMN_BEST_SESSION, currentSession);
+            db.update(TABLE_USER, bestSessionUpdate, null, null);
             cursor.close();
             return true;
         }
@@ -202,13 +208,13 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Return the total number of tasted beers
-    public int getTotalTastedBeers() {
-        // TO DO
+    // TODO
+    int getTotalTastedBeers() {
         return 0;
     }
 
     // Return total litres that were consumed
-    public double getTotalLitres() {
+    double getTotalLitres() {
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -222,7 +228,7 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Return the total time spent drinking in seconds
-    public long getTotalTime() {
+    long getTotalTime() {
         String query = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -235,31 +241,18 @@ public class DBHandler extends SQLiteOpenHelper {
         return 0;
     }
 
-    // Return the best session
-    public double getBestSession() {
-        String query = "SELECT * FROM " + TABLE_USER;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            double bestSession = cursor.getDouble(4);
-            cursor.close();
-            return bestSession;
-        }
-        cursor.close();
-        return 0.0;
-    }
-
-    // Reset the whole journey
-    public void resetJourney() {
+    // Reset the whole user's journey data from the db.
+    // Including beers tasted, and user stats
+    void resetUserData() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_BEERS_TASTED, 0);
         db.update(TABLE_USER, cv, null, null);
-        resetStats();
+        resetUserStats();
     }
 
-    // Reset everything except different beers tasted
-    public void resetStats() {
+    // Reset user drinking session stats
+    void resetUserStats() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_LITRES_CONSUMED, 0);

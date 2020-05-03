@@ -3,6 +3,7 @@ package com.example.beerapp;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,15 +25,15 @@ public class DrinkSessionsFragment extends Fragment {
     private static final double HALF_PINT_TO_LITRE = 0.3;
 
     // Initialize variables
-    private DBHandler dbHandler;  // Database
+    private DBHandler dbHandler;  // Database Helper
     private View rootView; // The root view of the fragment, used to get the rest view components
     private Chronometer sessionChronometer; // Chronometer used to count the time in a session
     private boolean isDrinking; // Represents if the user is currently in a drink session
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
-    private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER)
+    private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER) // TODO
 
     public DrinkSessionsFragment() {
-        // Required empty public constructor
+        // Required empty constructor
     }
 
     @Override
@@ -172,29 +173,42 @@ public class DrinkSessionsFragment extends Fragment {
     // Method called when the button STOP SESSION is pressed to stop the chronometer,
     // save(update) the current's drink session outcomes and disable the view components
     private void stopDrinkSession() {
+        String logMessageTag = "Database Interaction";
         // Save the values to variables to be stored in the DB
-        dbHandler.addLitres(totalLitresDrank);
+        if (dbHandler.addLitres(totalLitresDrank))
+        {
+            // Time elapsed in millis
+            long elapsedMillis = SystemClock.elapsedRealtime() - sessionChronometer.getBase();
+            // Save the time of the session (in seconds) to the DB
+            if (dbHandler.addSessionTime(elapsedMillis / 1000))
+            {
+                // Save the session's litres in the DB if it is the best session
+                if(totalLitresDrank > dbHandler.getBestSession())
+                {
+                    if (dbHandler.updateBestSession(totalLitresDrank))
+                    {
+                        // Reset the variables' values
+                        sessionChronometer.setBase(SystemClock.elapsedRealtime());
+                        totalLitresDrank = 0;
+                        // Stop the chronometer
+                        sessionChronometer.stop();
 
-        // Time elapsed in millis
-        long elapsedMillis = SystemClock.elapsedRealtime() - sessionChronometer.getBase();
-        // Save the time of the session (in seconds) to the DB
-        dbHandler.addSessionTime(elapsedMillis / 1000);
+                        disableSessionComponents();
 
-        // Add the session's litres in the DB if it is the best session
-        dbHandler.bestSession(totalLitresDrank);
+                        // Update the stats
+                        updateStats();
 
-        // Reset the variables' values
-        sessionChronometer.setBase(SystemClock.elapsedRealtime());
-        totalLitresDrank = 0;
-        // Stop the chronometer
-        sessionChronometer.stop();
-
-        disableSessionComponents();
-
-        // Update the stats
-        updateStats();
-
-        this.isDrinking = false;
+                        this.isDrinking = false;
+                    }
+                    else
+                        Log.i(logMessageTag, "Could not save best session to the DB");
+                }
+            }
+            else
+                Log.i(logMessageTag, "Could not save session's time to the DB");
+        }
+        else
+            Log.i(logMessageTag, "Could not save session's litres to the DB");
     }
 
     // Method called to add half or a pint of beer

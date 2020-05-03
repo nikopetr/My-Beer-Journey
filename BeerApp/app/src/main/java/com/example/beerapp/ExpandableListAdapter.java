@@ -11,22 +11,23 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
-// This is a class that links an expandable list view with data
+// Class that links an expandable list view with data
 // It is used for the settings section for the FAQ
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listDataHeader;
     private HashMap<String, List<String>> listHashMap;
 
-    // Constructor
-    public ExpandableListAdapter (Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap) {
+    // Class constructor
+    ExpandableListAdapter (Context context, List<String> listDataHeader, HashMap<String, List<String>> listHashMap) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listHashMap = listHashMap;
     }
 
-    // All functions of BaseExpandableListAdapter
+    // Overwritten methods of BaseExpandableListAdapter
     // Gets the number of groups
     @Override
     public int getGroupCount() {
@@ -48,7 +49,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     // Gets the data associated with the given child within the given group
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return listHashMap.get(listDataHeader.get(groupPosition)).get(childPosition);
+        return Objects.requireNonNull(listHashMap.get(listDataHeader.get(groupPosition))).get(childPosition);
     }
 
     // Gets the ID for the group at the given position
@@ -75,6 +76,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String headerTitle = (String)getGroup(groupPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
             convertView = inflater.inflate(R.layout.list_group, null);
         }
         TextView listHeader = convertView.findViewById(R.id.listHeader);
@@ -89,6 +91,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         final String childText = (String)getChild(groupPosition, childPosition);
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            assert inflater != null;
             convertView = inflater.inflate(R.layout.list_item, null);
         }
         TextView listChild = convertView.findViewById(R.id.listItem);
