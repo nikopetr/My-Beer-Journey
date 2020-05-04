@@ -13,8 +13,7 @@
     <string name="beer_manufacturer">Manufacturer: manufacturer</string>
     <string name="beer_country">Country: country</string>
     <string name="beer_abv">Alc By Volume: abv</string>
-    <string name="add_want_to_taste">Add to Want to taste list</string>
-    <string name="add_tasted">Add to Tasted list</string>
+    <string name="add_tasted">Add beer to tasted</string>
     <string name="beer_image_caption">Beer Image</string>
 
 
