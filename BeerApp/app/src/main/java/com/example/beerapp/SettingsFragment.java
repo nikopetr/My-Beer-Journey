@@ -22,7 +22,11 @@ public class SettingsFragment extends Fragment {
 //    private HashMap<String, List<String>> listHash;  // Hash map used to pair the answers with the questions of the FAQ
     private DBHandler dbHandler; // Database Handler
 
-    public SettingsFragment(DBHandler dbHandler) {
+    public SettingsFragment( ) {
+        // Reburied empty constructor to call Fragment's constructor
+    }
+
+    SettingsFragment(DBHandler dbHandler) {
         // Initialize the db handler
         this.dbHandler = dbHandler;
     }

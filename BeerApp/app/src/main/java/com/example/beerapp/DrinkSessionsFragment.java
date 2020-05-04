@@ -32,7 +32,11 @@ public class DrinkSessionsFragment extends Fragment {
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
     private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER) // TODO
 
-    public DrinkSessionsFragment(DBHandler dbHandler) {
+     public DrinkSessionsFragment( ) {
+         // Reburied empty constructor to call Fragment's constructor
+    }
+
+    DrinkSessionsFragment(DBHandler dbHandler) {
         // Initialize the DB Handler
         this.dbHandler = dbHandler;
     }

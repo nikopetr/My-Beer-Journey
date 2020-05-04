@@ -22,7 +22,11 @@ public class BeerCatalogFragment extends Fragment {
     private List<Beer> beerList; // List including the Beer objects
     private DBHandler dbHandler;
 
-    public BeerCatalogFragment(DBHandler dbHandler) {
+    public BeerCatalogFragment( ) {
+        // Reburied empty constructor to call Fragment's constructor
+    }
+
+    BeerCatalogFragment(DBHandler dbHandler) {
         // Initialize the DB Handler
         // Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
         this.dbHandler = dbHandler;
