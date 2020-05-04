@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
+    private Context context;
 
     // Constants used for the DB
     private static final int DATABASE_VERSION = 1;
@@ -38,7 +39,7 @@ public class DBHandler extends SQLiteOpenHelper {
     // Constructor
     DBHandler(Context context, SQLiteDatabase.CursorFactory factory){
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-
+        this.context = context;
 
         //final String DB_DESTINATION = "/data/data/com.example.beerapp/databases/beersDB.db";
 
@@ -129,7 +130,18 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setCountry(cursor.getString(3));
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
-            beer.setBeerImageId(R.drawable.ic_local_drink_black_24dp); // TODO Change How we save image
+            // Get the the name of the beer in the correct format as it is in drawable folder
+            // Replace or spaces and - with underscore
+            // Remove parenthesis, . and '
+            // Remove the first number 5 (this is only for one image for the beer "5 Seeds Crisp Apple Cider
+            // because you cannot use a number as the start of a drawable
+            // This might be a problem in the future, need to find a better solution
+            // Transform the formatted name to lowercase, because you cannot use uppercase in drawable
+            String drawableBeerName = beer.getName().replaceAll("[ -]", "_").replaceAll("[().']", "")
+                    .replaceFirst("5", "").toLowerCase();
+            int imageId = context.getResources().getIdentifier(drawableBeerName, "drawable", context.getPackageName());
+            beer.setBeerImageId(imageId);
+
             beers.add(beer);
         }
         cursor.close();

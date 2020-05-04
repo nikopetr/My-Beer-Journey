@@ -48,7 +48,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
             beerNameTextView.setText(beerSelected.getName());
             manufacturerTextView.setText(String.format("%s %s", manufacturerTextView.getText(),beerSelected.getManufacturer()));
             countryTextView.setText(String.format("%s %s", countryTextView.getText(),beerSelected.getCountry()));
-            abvTextView.setText(String.format("%s %s", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
+            abvTextView.setText(String.format("%s %s %%", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
             typeTextView.setText(String.format("%s %s", typeTextView.getText(),beerSelected.getType()));
             beerImageView.setImageResource(beerSelected.getBeerImageId());
 
