@@ -5,13 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 // Class used for the settings fragments.
@@ -26,16 +22,15 @@ public class SettingsFragment extends Fragment {
         // Reburied empty constructor to call Fragment's constructor
     }
 
-    SettingsFragment(DBHandler dbHandler) {
-        // Initialize the db handler
-        this.dbHandler = dbHandler;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Initialize the root view
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        // Gets the dbHandler from the main activity
+        this.dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
 
         // Initialize the buttons
         Button resetJourneyButton;

@@ -7,15 +7,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,9 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     // DB Handler for all Database Stuff
     private DBHandler dbHandler;
-
     private ActionBar actionBar; // A primary toolbar within the activity used to display the information of each fragment
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             // Initialize the UI
             actionBar.setTitle(BEER_CATALOG_TITLE); // Changes the title of the toolbar
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new BeerCatalogFragment(dbHandler), BEER_CATALOG_TITLE).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, new BeerCatalogFragment(), BEER_CATALOG_TITLE).commit();
         }
 
     }
@@ -75,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Saves which fragment was loaded  for title of the action bar after it loads  back
         outState.putCharSequence("actonBarTitleSaved",actionBar.getTitle());
+        //outState.putSerializable("asd",dbHandler);
     }
 
     @Override
@@ -118,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new BeerCatalogFragment(dbHandler), BEER_CATALOG_TITLE);
+                    addFragment(new BeerCatalogFragment(), BEER_CATALOG_TITLE);
                 }
                 return true;
             case R.id.drinkSessionsItem:
@@ -131,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new DrinkSessionsFragment(dbHandler), DRINK_SESSIONS_TITLE);
+                    addFragment(new DrinkSessionsFragment(), DRINK_SESSIONS_TITLE);
                 }
                 return true;
             case R.id.settingsItem:
@@ -141,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new SettingsFragment(dbHandler), SETTINGS_TITLE);
+                    addFragment(new SettingsFragment(), SETTINGS_TITLE);
                 }
                 return true;
         }
@@ -158,6 +154,11 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    DBHandler getDbHandler()
+    {
+        return dbHandler;
+    }
+
     // Overwritten function in oder to finish activity if back is pressed and the fragment stack has only 1 fragment
     @Override
     public void onBackPressed(){
@@ -165,9 +166,5 @@ public class MainActivity extends AppCompatActivity {
             finish();
         else
             super.onBackPressed();
-    }
-
-    public Context getContext() {
-        return getApplicationContext();
     }
 }

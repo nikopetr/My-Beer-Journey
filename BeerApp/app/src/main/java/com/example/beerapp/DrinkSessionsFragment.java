@@ -36,16 +36,12 @@ public class DrinkSessionsFragment extends Fragment {
          // Reburied empty constructor to call Fragment's constructor
     }
 
-    DrinkSessionsFragment(DBHandler dbHandler) {
-        // Initialize the DB Handler
-        this.dbHandler = dbHandler;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
-
         // Inflate the layout for this fragment
+        rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
+        // Gets the dbHandler from the main activity
+        this.dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
         return rootView;
     }
 
