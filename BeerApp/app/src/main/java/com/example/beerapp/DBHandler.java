@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -37,30 +39,29 @@ public class DBHandler extends SQLiteOpenHelper {
     DBHandler(Context context, SQLiteDatabase.CursorFactory factory){
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
 
-        final String DB_DESTINATION = "/data/data/com.example.beerapp/databases/beersDB.db";
 
-// Check if the database exists before copying
-        boolean initialiseDatabase = (new File(DB_DESTINATION)).exists();
-        if (initialiseDatabase == false) {
+        //final String DB_DESTINATION = "/data/data/com.example.beerapp/databases/beersDB.db";
+
+
+        //This is the path where the database will be
+        String outFileName = context.getDatabasePath(DATABASE_NAME).getPath();
+        // Check if the database exists before copying
+        boolean initialiseDatabase = (new File(outFileName)).exists();
+        if (!initialiseDatabase) {
             try{
-                //this.getWritableDatabase();
-                // Open the .db file in your assets directory
-                InputStream is = context.getAssets().open("beersDB.db");
-
-                // Copy the database into the destination
-                OutputStream os = new FileOutputStream(DB_DESTINATION);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = is.read(buffer)) > 0){
-                    os.write(buffer, 0, length);
+                InputStream mInput = context.getAssets().open(DATABASE_NAME);
+                OutputStream mOutput = new FileOutputStream(outFileName);
+                byte[] mBuffer = new byte[1024];
+                int mLength;
+                while ((mLength = mInput.read(mBuffer)) > 0) {
+                    mOutput.write(mBuffer, 0, mLength);
                 }
-                os.flush();
-
-                os.close();
-                is.close();
+                mOutput.flush();
+                mOutput.close();
+                mInput.close();
 
             }catch (Exception e){
-
+                Log.d("ERROR", "RE");
             }
         }
     }
@@ -78,6 +79,7 @@ public class DBHandler extends SQLiteOpenHelper {
 //                COLUMN_TYPE + " TEXT" + ")";
 //        db.execSQL(CREATE_BEERS_TABLE);
 //
+//
 //        String CREATE_USER_TABLE = "CREATE TABLE " +
 //                TABLE_USER + "(" +
 //                COLUMN_ID + " INTEGER PRIMARY KEY," +
@@ -93,7 +95,6 @@ public class DBHandler extends SQLiteOpenHelper {
 //        values.put(COLUMN_TOTAL_TIME, 0);
 //        values.put(COLUMN_BEST_SESSION, 0);
 //        db.insert(TABLE_USER, null, values);
-
     }
 
     // Upgrades the DB, deleting recreating the DB (since we don't need the method to do anything special)
@@ -110,8 +111,8 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, beer.getBeerName());
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_BEERS, null, values);
-//        db.close();
     }
+
 
     //Μέθοδος για εύρεση προιόντος βάσει ονομασίας του
 //    public Product findProduct(String productname) {
@@ -161,7 +162,6 @@ public class DBHandler extends SQLiteOpenHelper {
         while (cursor.moveToNext())
             beers.add(new Beer(cursor.getString(1), R.drawable.ic_local_drink_black_24dp)); // Column 1 contains the name of the beer, image is going to change
         cursor.close();
-//        db.close();
         return beers;
     }
 
@@ -184,6 +184,7 @@ public class DBHandler extends SQLiteOpenHelper {
             ContentValues litresUpdate = new ContentValues();
             litresUpdate.put(COLUMN_LITRES_CONSUMED, alreadyDrankLitres);
             db.update(TABLE_USER, litresUpdate, null, null);
+            Log.d("LITRES","ADDED");
             cursor.close();
             return true;
         }

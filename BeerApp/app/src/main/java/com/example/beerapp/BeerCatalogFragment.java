@@ -20,10 +20,12 @@ public class BeerCatalogFragment extends Fragment {
 
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> beerList; // List including the Beer objects
+    private DBHandler dbHandler;
 
-    public BeerCatalogFragment() {
-        // Required empty constructor
+    public BeerCatalogFragment(DBHandler dbHandler) {
+        // Initialize the DB Handler
         // Log.d("BeerCatalogFragment","BeerCatalogFragment object created");
+        this.dbHandler = dbHandler;
     }
 
     @Override
@@ -36,8 +38,16 @@ public class BeerCatalogFragment extends Fragment {
 
 
         // Retrieves the beer objects from the DB
-        DBHandler dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
+        dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
+
+//        Beer keo = new Beer("Keo", 1);
+//        Beer corona = new Beer("Corona", 2);
+//        Beer alfa = new Beer("Alfa", 3);
+//        dbHandler.addBeer(keo);
+//        dbHandler.addBeer(corona);
+//        dbHandler.addBeer(alfa);
         beerList = dbHandler.getAllBeers();
+
 
         ListView beerListView = rootView.findViewById(R.id.beerListView);
         // Initializing Array adapter for the beer list

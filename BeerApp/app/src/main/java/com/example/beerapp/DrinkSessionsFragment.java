@@ -32,8 +32,9 @@ public class DrinkSessionsFragment extends Fragment {
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
     private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER) // TODO
 
-    public DrinkSessionsFragment() {
-        // Required empty constructor
+    public DrinkSessionsFragment(DBHandler dbHandler) {
+        // Initialize the DB Handler
+        this.dbHandler = dbHandler;
     }
 
     @Override
@@ -48,8 +49,6 @@ public class DrinkSessionsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Initialize the db
-        this.dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
         // Initialize the chronometer
         this.sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
 

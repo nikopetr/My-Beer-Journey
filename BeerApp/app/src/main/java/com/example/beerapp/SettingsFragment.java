@@ -20,10 +20,11 @@ public class SettingsFragment extends Fragment {
 
 //    private List<String> listDataHeader; // List used for the data headers
 //    private HashMap<String, List<String>> listHash;  // Hash map used to pair the answers with the questions of the FAQ
-    private DBHandler dbHandler; // Database Helper
+    private DBHandler dbHandler; // Database Handler
 
-    public SettingsFragment() {
-        // Required empty constructor
+    public SettingsFragment(DBHandler dbHandler) {
+        // Initialize the db handler
+        this.dbHandler = dbHandler;
     }
 
     @Override
@@ -31,9 +32,6 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Initialize the root view
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        // Initialize the db handler
-        dbHandler = new DBHandler(Objects.requireNonNull(getActivity()), null);
 
         // Initialize the buttons
         Button resetJourneyButton;
