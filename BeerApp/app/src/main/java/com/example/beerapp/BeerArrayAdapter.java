@@ -28,9 +28,11 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         this.adaptedBeerList = beerList;
         this.beerList = new ArrayList<>();
 
-        // Performing deep copy for each beer on a new beer list, array in order to not lose the items used on the adapter
+        // Performing deep copy for each beer on a new beer list array,
+        // to avoid losing the items used on the adapter when we use the search view
         for (Beer beer : beerList)
-            this.beerList.add(new Beer(beer.getBeerName(), beer.getBeerImageId()));
+            this.beerList.add(new Beer(beer.get_id(), beer.getName(), beer.getManufacturer(),
+                    beer.getCountry(), beer.getAbv(), beer.getType(), beer.getBeerImageId()));
 
         // Using a custom filter in order to be able to search for a beer and get the results based on the beerName
         beerNameFilter = new Filter() {
@@ -41,7 +43,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
 
 //                For debugging: print in the logcat (Debug level)
 //                for (Beer beer : BeerArrayAdapter.this.beerList)
-//                    Log.d("Beers in list",beer.getBeerName());
+//                    Log.d("Beers in list",beer.getName());
 
                 if (constraint == null || constraint.length() == 0)
                     beerSuggestions.addAll(BeerArrayAdapter.this.beerList);
@@ -51,7 +53,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
                     String filterPattern = constraint.toString().toLowerCase().trim();
 
                     for (Beer beer : BeerArrayAdapter.this.beerList)
-                        if (beer.getBeerName().toLowerCase().contains((filterPattern)))
+                        if (beer.getName().toLowerCase().contains((filterPattern)))
                             beerSuggestions.add(beer);
                 }
 
@@ -71,7 +73,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
 
             @Override
             public CharSequence convertResultToString(Object resultValue) {
-                return (((Beer)(resultValue)).getBeerName());
+                return (((Beer)(resultValue)).getName());
             }
         };
     }
@@ -98,7 +100,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
 
         TextView beerNameTextView = beerItemView.findViewById(R.id.beetItemTextView);
         ImageView beerImageView = beerItemView.findViewById(R.id.beerItemImageView);
-        beerNameTextView.setText(adaptedBeerList.get(position).getBeerName());
+        beerNameTextView.setText(adaptedBeerList.get(position).getName());
         beerImageView.setImageResource(adaptedBeerList.get(position).getBeerImageId());
         return  beerItemView;
     }

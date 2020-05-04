@@ -21,6 +21,10 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
         // Obtain references to objects
         TextView beerNameTextView = findViewById(R.id.beerNameTextView);
+        TextView manufacturerTextView = findViewById(R.id.manufacturerTextView);
+        TextView countryTextView = findViewById(R.id.countryTextView);
+        TextView abvTextView = findViewById(R.id.abvTextView);
+        TextView typeTextView = findViewById(R.id.typeTextView);
         ImageView beerImageView = findViewById(R.id.beerImageView);
 
         // Get Bundle from the Intent
@@ -33,7 +37,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
 //            // For debugging: print in the logcat (Debug level)
 //            if (beerSelected != null) {
-//                Log.d("BeerDetails.java", beerSelected.getBeerName());
+//                Log.d("BeerDetails.java", beerSelected.getName());
 //            }
 //            else{
 //                Log.d("BeerDetails.java", "null Beer object");
@@ -41,7 +45,11 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
             // Updates the UI
             assert beerSelected != null;
-            beerNameTextView.setText(beerSelected.getBeerName());
+            beerNameTextView.setText(beerSelected.getName());
+            manufacturerTextView.setText(String.format("%s %s", manufacturerTextView.getText(),beerSelected.getManufacturer()));
+            countryTextView.setText(String.format("%s %s", countryTextView.getText(),beerSelected.getCountry()));
+            abvTextView.setText(String.format("%s %s", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
+            typeTextView.setText(String.format("%s %s", typeTextView.getText(),beerSelected.getType()));
             beerImageView.setImageResource(beerSelected.getBeerImageId());
 
         }

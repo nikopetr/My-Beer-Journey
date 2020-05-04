@@ -9,10 +9,10 @@
 
    <!-- Strings for activity_beer -->
     <string name="beer_name">Beer Name</string>
-    <string name="beer_type">Type: type</string>
-    <string name="beer_manufacturer">Manufacturer: manufacturer</string>
-    <string name="beer_country">Country: country</string>
-    <string name="beer_abv">Alc By Volume: abv</string>
+    <string name="beer_manufacturer">Manufacturer: </string>
+    <string name="beer_country">Country: </string>
+    <string name="beer_abv">Alc By Volume: </string>
+    <string name="beer_type">Type: </string>
     <string name="add_tasted">Add beer to tasted</string>
     <string name="beer_image_caption">Beer Image</string>
 

@@ -106,13 +106,13 @@ public class DBHandler extends SQLiteOpenHelper {
 //        onCreate(db);
     }
 
-    // Method for adding a new Beer to the DB
-    public void addBeer(Beer beer) {
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, beer.getBeerName());
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(TABLE_BEERS, null, values);
-    }
+//    // Method for adding a new Beer to the DB
+//    public void addBeer(Beer beer) {
+//        ContentValues values = new ContentValues();
+//        values.put(COLUMN_NAME, beer.getName());
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        db.insert(TABLE_BEERS, null, values);
+//    }
 
     // Returns all the Beer objects from the DB
     List<Beer> getAllBeers() {
@@ -121,7 +121,17 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         List<Beer> beers = new ArrayList<>();
         while (cursor.moveToNext())
-            beers.add(new Beer(cursor.getString(1), R.drawable.ic_local_drink_black_24dp)); // Column 1 contains the name of the beer, image is going to change
+        {
+            Beer beer = new Beer();
+            beer.set_id(cursor.getInt(0));
+            beer.setName(cursor.getString(1));
+            beer.setManufacturer(cursor.getString(2));
+            beer.setCountry(cursor.getString(3));
+            beer.setAbv(cursor.getFloat(4));
+            beer.setType(cursor.getString(5));
+            beer.setBeerImageId(R.drawable.ic_local_drink_black_24dp); // TODO Change How we save image
+            beers.add(beer);
+        }
         cursor.close();
         return beers;
     }
