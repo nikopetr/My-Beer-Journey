@@ -43,13 +43,13 @@ public class DBHandler extends SQLiteOpenHelper {
         //final String DB_DESTINATION = "/data/data/com.example.beerapp/databases/beersDB.db";
 
 
-        //This is the path where the database will be
+        // Path where the database will be
         String outFileName = context.getDatabasePath(DATABASE_NAME).getPath();
         // Check if the database exists before copying
         boolean initialiseDatabase = (new File(outFileName)).exists();
         if (!initialiseDatabase) {
             try{
-                InputStream mInput = context.getAssets().open(DATABASE_NAME);
+                InputStream mInput = context.getAssets().open("databases/"+DATABASE_NAME);
                 OutputStream mOutput = new FileOutputStream(outFileName);
                 byte[] mBuffer = new byte[1024];
                 int mLength;
@@ -60,8 +60,9 @@ public class DBHandler extends SQLiteOpenHelper {
                 mOutput.close();
                 mInput.close();
 
-            }catch (Exception e){
-                Log.d("ERROR", "RE");
+            }
+            catch (IOException e){
+                Log.e("Initialise DB Error", "Error copying the database from assets to local files");
             }
         }
     }
@@ -112,46 +113,6 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(TABLE_BEERS, null, values);
     }
-
-
-    //Μέθοδος για εύρεση προιόντος βάσει ονομασίας του
-//    public Product findProduct(String productname) {
-//        String query = "SELECT * FROM " + TABLE_PRODUCTS + " WHERE " +
-//                COLUMN_PRODUCTNAME + " = '" + productname + "'";
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(query, null);
-//        Product product = new Product();
-//        if (cursor.moveToFirst()) {
-//            cursor.moveToFirst();
-//            product.setID(Integer.parseInt(cursor.getString(0)));
-//            product.setProductName(cursor.getString(1));
-//            product.setQuantity(Integer.parseInt(cursor.getString(2)));
-//            cursor.close();
-//        } else {
-//            product = null;
-//        }
-//        db.close();
-//        return product;
-//    }
-
-    //Μέθοδος για διαγραφή προιόντος βάσει ονομασίας του
-//    public boolean deleteProduct(String productname) {
-//        boolean result = false;
-//        String query = "SELECT * FROM " + TABLE_PRODUCTS + " WHERE " +
-//                COLUMN_PRODUCTNAME + " = '" + productname + "'";
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(query, null);
-//        Product product = new Product();
-//        if (cursor.moveToFirst()) {
-//            product.setID(Integer.parseInt(cursor.getString(0)));
-//            db.delete(TABLE_PRODUCTS, COLUMN_ID + " = ?",
-//                    new String[] { String.valueOf(product.getID()) });
-//            cursor.close();
-//            result = true;
-//        }
-//        db.close();
-//        return result;
-//    }
 
     // Returns all the Beer objects from the DB
     List<Beer> getAllBeers() {
