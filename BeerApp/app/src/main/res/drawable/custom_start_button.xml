@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/colorStopSession" />
+            <solid android:color="@color/colorStartSession" />
             <corners android:radius="10dp"/>
             <padding
                 android:left="8dp"
@@ -11,7 +11,7 @@
     </item>
     <item android:state_pressed="false">
         <shape>
-            <solid android:color="@color/colorStopSessionDark" />
+            <solid android:color="@color/colorStartSessionDark" />
             <corners android:radius="10dp"/>
             <padding
                 android:left="8dp"

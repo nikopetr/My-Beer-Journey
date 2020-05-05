@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ECECEC</color>
-    <color name="colorPrimaryDark">#FF6600</color>
+    <color name="colorPrimary">#ff7b00</color>
+    <color name="colorPrimaryDark">#ff6200</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorButtonPrimary">#ffd04f</color>
-    <color name="colorButtonPrimaryDark">#ffbd0a</color>
-    <color name="colorStopSessionRed">#bd0000</color>
-    <color name="colorStopSessionRedDark">#910000</color>
+    <color name="colorButtonPrimary">#ff7b00</color>
+    <color name="colorButtonPrimaryDark">#ff6200</color>
+    <color name="colorStartSession">#209600</color>
+    <color name="colorStartSessionDark">#006600</color>
+    <color name="colorStopSession">#CC0000</color>
+    <color name="colorStopSessionDark">#E10000</color>
+    <color name="colorBottomNav">#ffffff</color>
 </resources>
