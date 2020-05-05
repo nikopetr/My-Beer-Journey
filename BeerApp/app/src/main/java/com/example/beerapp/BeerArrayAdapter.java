@@ -14,19 +14,20 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-// Class used as a custom adapter in order to have an image for each item, for our ListVIew of Beers
+// Class used as a custom adapter in order to have an image for each item, for our ListVIew or GridView of Beers
 public class BeerArrayAdapter extends ArrayAdapter<Beer> {
     private List<Beer> beerList;
     private List<Beer> adaptedBeerList;
     private Activity context;
     private Filter beerNameFilter;
+    private int itemViewId; // The id item that is used for this adapter
 
-
-    BeerArrayAdapter(Activity context, int resource, List<Beer> beerList) {
+    BeerArrayAdapter(Activity context, int resource, List<Beer> beerList, int itemViewId) {
         super(context, resource, beerList);
         this.context = context;
         this.adaptedBeerList = beerList;
         this.beerList = new ArrayList<>();
+        this.itemViewId = itemViewId;
 
         // Performing deep copy for each beer on a new beer list array,
         // to avoid losing the items used on the adapter when we use the search view
@@ -96,7 +97,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         LayoutInflater inflater = context.getLayoutInflater();
 
         if(convertView == null)
-            beerItemView = inflater.inflate(R.layout.row_beer_item, parent, false);
+            beerItemView = inflater.inflate(itemViewId, parent, false);
 
         TextView beerNameTextView = beerItemView.findViewById(R.id.beetItemTextView);
         ImageView beerImageView = beerItemView.findViewById(R.id.beerItemImageView);

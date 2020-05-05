@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String BEER_CATALOG_TITLE = "Beer Catalog";
     private static final String DRINK_SESSIONS_TITLE = "My Drink Sessions";
     private static final String SETTINGS_TITLE = "Settings";
+    private static final String MY_BEER_LIST = "My Beer List";
 
     // DB Handler for all Database Stuff
     private DBHandler dbHandler;
@@ -138,6 +139,16 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     // If the fragment does not exist, add it to fragment manager.
                     addFragment(new SettingsFragment(), SETTINGS_TITLE);
+                }
+                return true;
+            case R.id.myBeerListItem:
+                if (fragmentManager.findFragmentByTag(MY_BEER_LIST) != null) {
+                    // If the fragment already exists, show it.
+                    showFragment((MY_BEER_LIST));
+                }
+                else {
+                    // If the fragment does not exist, add it to fragment manager.
+                    addFragment(new MyBeerListFragment(), MY_BEER_LIST);
                 }
                 return true;
         }

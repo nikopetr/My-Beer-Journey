@@ -2,26 +2,26 @@ package com.example.beerapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-
 import androidx.fragment.app.Fragment;
+
 import java.util.List;
 import java.util.Objects;
 
 
-public class BeerCatalogFragment extends Fragment {
+public class MyBeerListFragment extends Fragment {
 
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> beerList; // List including the Beer objects
 
-    public BeerCatalogFragment( ) {
+    public MyBeerListFragment( ) {
         // Required empty constructor to call Fragment's constructor
     }
 
@@ -30,15 +30,15 @@ public class BeerCatalogFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_my_beer_list, container, false);
 
         // Gets the dbHandler from the main activity
         DBHandler dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
         this.beerList = dbHandler.getAllBeers();
 
-        ListView beerListView = rootView.findViewById(R.id.beerListView);
+        GridView beerListView = rootView.findViewById(R.id.beerGridView);
         // Initializing Array adapter for the beer list
-        beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, R.layout.row_beer_item); // Array adapter for the beer list
+        beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, R.layout.grid_beer_item); // Array adapter for the beer list
         beerListView.setAdapter(beerListArrayAdapter);
         beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,8 +60,6 @@ public class BeerCatalogFragment extends Fragment {
                 beerListArrayAdapter.getFilter().filter(newText);
                 return false;
             }
-
-
         });
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
