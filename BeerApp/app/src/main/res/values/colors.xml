@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#ECECEC</color>
+    <color name="colorPrimaryDark">#FF6600</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="stopSessionRed">#bd0000</color>
-    <color name="stopSessionRedDark">#910000</color>
+    <color name="colorButtonPrimary">#ffd04f</color>
+    <color name="colorButtonPrimaryDark">#ffbd0a</color>
+    <color name="colorStopSessionRed">#bd0000</color>
+    <color name="colorStopSessionRedDark">#910000</color>
 </resources>
