@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -141,10 +143,17 @@ public class DBHandler extends SQLiteOpenHelper {
                     .replaceFirst("5", "").toLowerCase();
             int imageId = context.getResources().getIdentifier(drawableBeerName, "drawable", context.getPackageName());
             beer.setBeerImageId(imageId);
-
+            // Add the beer to the beers list
             beers.add(beer);
         }
         cursor.close();
+        // Sort the beers by ascending order by name
+        Collections.sort(beers, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
         return beers;
     }
 
