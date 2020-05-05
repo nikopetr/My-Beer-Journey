@@ -134,7 +134,7 @@ public class DrinkSessionsFragment extends Fragment {
         // Change the button to show "STOP SESSION" with red background
         Button sessionButton = rootView.findViewById(R.id.startSessionButton);
         sessionButton.setText(getResources().getString(R.string.stop_session));
-        sessionButton.setBackgroundColor(Color.parseColor("#bd0000"));
+        sessionButton.setBackgroundResource(R.drawable.custom_stop_button);
         // Enable the "Time Drinking" text
         rootView.findViewById(R.id.timeDrinkingTextView).setEnabled(true);
         // Enable the "Total beer drank" text
@@ -156,7 +156,7 @@ public class DrinkSessionsFragment extends Fragment {
         // Change the button to show "START SESSION" with green background
         Button sessionButton = rootView.findViewById(R.id.startSessionButton);
         sessionButton.setText(getResources().getString(R.string.start_session));
-        sessionButton.setBackgroundColor(Color.parseColor("#4caf50"));
+        sessionButton.setBackgroundResource(R.drawable.custom_buttons);
         // Disable the "Time Drinking" text
         rootView.findViewById(R.id.timeDrinkingTextView).setEnabled(false);
         // Disable the "Total beer drank" text
