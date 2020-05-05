@@ -133,14 +133,10 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
             // Get the the name of the beer in the correct format as it is in drawable folder
-            // Replace or spaces and - with underscore
-            // Remove parenthesis, . and '
-            // Remove the first number 5 (this is only for one image for the beer "5 Seeds Crisp Apple Cider
-            // because you cannot use a number as the start of a drawable
-            // This might be a problem in the future, need to find a better solution
+            // Remove spaces, -, parenthesis, . and '
+            // Because you cannot have these in the name of a file in the drawable folder
             // Transform the formatted name to lowercase, because you cannot use uppercase in drawable
-            String drawableBeerName = beer.getName().replaceAll("[ -]", "_").replaceAll("[().']", "")
-                    .replaceFirst("5", "").toLowerCase();
+            String drawableBeerName = beer.getName().replaceAll("[().' -]", "").toLowerCase();
             int imageId = context.getResources().getIdentifier(drawableBeerName, "drawable", context.getPackageName());
             beer.setBeerImageId(imageId);
             // Add the beer to the beers list
