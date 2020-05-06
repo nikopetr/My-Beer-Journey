@@ -40,7 +40,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // If the user wants to reset everything
-                dbHandler.resetUserData();
+                dbHandler.resetUserData(); //TODO put check if returns true
             }
         });
 
@@ -51,7 +51,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // If the user wants to only reset the stats but not the different tasted beers
-                dbHandler.resetUserStats();
+                dbHandler.resetUserStats(); //TODO put check if returns true
             }
         });
 

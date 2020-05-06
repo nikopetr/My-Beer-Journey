@@ -31,9 +31,10 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_COUNTRY = "country";
     private static final String COLUMN_ABV = "abv";
     private static final String COLUMN_TYPE = "type";
+    private static final String COLUMN_TASTED = "tasted";
     // For user table
     private static final String TABLE_USER = "user";
-    private static final String COLUMN_BEERS_TASTED = "tasted";
+    private static final String COLUMN_BEERS_TASTED = "tasted"; //TODO Change database user column taste to beers_tasted ( from DB and then from here)
     private static final String COLUMN_LITRES_CONSUMED = "litres";
     private static final String COLUMN_TOTAL_TIME = "time";
     private static final String COLUMN_BEST_SESSION = "best_session";
@@ -99,6 +100,11 @@ public class DBHandler extends SQLiteOpenHelper {
 //        values.put(COLUMN_TOTAL_TIME, 0);
 //        values.put(COLUMN_BEST_SESSION, 0);
 //        db.insert(TABLE_USER, null, values);
+
+//        CREATE TABLE [tasted_beers](
+//                "_id"        INTEGER  NOT NULL PRIMARY KEY,
+//                "beer_id"        INTEGER NOT NULL
+//)
     }
 
     // Upgrades the DB, deleting recreating the DB (since we don't need the method to do anything special)
@@ -132,6 +138,7 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setCountry(cursor.getString(3));
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
+            beer.setTasted(cursor.getInt(6) == 1);
             // Get the the name of the beer in the correct format as it is in drawable folder
             // Remove spaces, -, parenthesis, . and '
             // Because you cannot have these in the name of a file in the drawable folder
@@ -153,11 +160,52 @@ public class DBHandler extends SQLiteOpenHelper {
         return beers;
     }
 
-    // Methods used in the My Stats fragment
-    // Add new tasted beer
-    // TODO
-    public boolean addTastedBeer() {
-        return true;
+    // Returns the tasted Beer objects from the DB
+    List<Beer> getTastedBeers() {
+        String query = "SELECT * FROM " + TABLE_BEERS + " WHERE " + COLUMN_TASTED + "=?";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[] {"1"});
+        List<Beer> beers = new ArrayList<>();
+        while (cursor.moveToNext())
+        {
+            Beer beer = new Beer();
+            beer.set_id(cursor.getInt(0));
+            beer.setName(cursor.getString(1));
+            beer.setManufacturer(cursor.getString(2));
+            beer.setCountry(cursor.getString(3));
+            beer.setAbv(cursor.getFloat(4));
+            beer.setType(cursor.getString(5));
+            beer.setTasted(cursor.getInt(6) == 1);
+            // Get the the name of the beer in the correct format as it is in drawable folder
+            // Remove spaces, -, parenthesis, . and '
+            // Because you cannot have these in the name of a file in the drawable folder
+            // Transform the formatted name to lowercase, because you cannot use uppercase in drawable
+            String drawableBeerName = beer.getName().replaceAll("[().' -]", "").toLowerCase();
+            int imageId = context.getResources().getIdentifier(drawableBeerName, "drawable", context.getPackageName());
+            beer.setBeerImageId(imageId);
+            // Add the beer to the beers list
+            beers.add(beer);
+        }
+        cursor.close();
+        // Sort the beers by ascending order by name
+        Collections.sort(beers, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
+        return beers;
+    }
+
+    // Changes the value of tasted the specific beer as given,
+    // returns true if a row from the table was affected
+    boolean updateBeerTasted(Beer beer) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_TASTED, beer.isTasted());
+
+        // If a row was affected return true
+        return (db.update(TABLE_BEERS, cv, COLUMN_ID + "=" + beer.get_id(), null) >= 1);
     }
 
     // Add session's litres to the DB
@@ -172,7 +220,7 @@ public class DBHandler extends SQLiteOpenHelper {
             ContentValues litresUpdate = new ContentValues();
             litresUpdate.put(COLUMN_LITRES_CONSUMED, alreadyDrankLitres);
             db.update(TABLE_USER, litresUpdate, null, null);
-            Log.d("LITRES","ADDED");
+            //Log.d("LITRES","ADDED");
             cursor.close();
             return true;
         }
@@ -263,22 +311,23 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // Reset the whole user's journey data from the db.
     // Including beers tasted, and user stats
-    void resetUserData() {
+    // returns true if a row from the table was affected
+    boolean resetUserData() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_BEERS_TASTED, 0);
-        db.update(TABLE_USER, cv, null, null);
-        resetUserStats();
+        return (db.update(TABLE_USER, cv, null, null) >=1 && resetUserStats());
     }
 
-    // Reset user drinking session stats
-    void resetUserStats() {
+    // Reset user drinking session stats,
+    // returns true if a row from the table was affected
+    boolean  resetUserStats() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_LITRES_CONSUMED, 0);
         cv.put(COLUMN_TOTAL_TIME, 0);
         cv.put(COLUMN_BEST_SESSION, 0);
-        db.update(TABLE_USER, cv, null, null);
+        return db.update(TABLE_USER, cv, null, null) >= 1;
     }
 
 }

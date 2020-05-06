@@ -14,6 +14,7 @@
     <string name="beer_abv">Alc By Volume: </string>
     <string name="beer_type">Type: </string>
     <string name="add_tasted">Add beer to tasted</string>
+    <string name="remove_tasted">Remove beer from tasted</string>
     <string name="beer_image_caption">Beer Image</string>
 
 

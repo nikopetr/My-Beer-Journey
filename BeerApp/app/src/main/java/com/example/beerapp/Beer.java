@@ -9,15 +9,16 @@ class Beer implements Serializable {
     private String manufacturer;
     private String country;
     private float abv;
-    private String type;
+    private String type; // String which represents the type of the beer
     private int beerImageId; // int used for the image of the specific beer
+    private boolean tasted; // boolean that represents if the user has tasted this beer or not
 
     Beer()
     {
 
     }
 
-    Beer(int _id, String name, String manufacturer, String country, float abv, String type, int beerImageId) {
+    Beer(int _id, String name, String manufacturer, String country, float abv, String type,boolean tasted, int beerImageId) {
         this._id = _id;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -25,6 +26,7 @@ class Beer implements Serializable {
         this.abv = abv;
         this.type = type;
         this.beerImageId = beerImageId;
+        this.tasted =  tasted;
     }
 
 
@@ -54,6 +56,14 @@ class Beer implements Serializable {
 
     void setBeerImageId(int beerImageId) {
         this.beerImageId = beerImageId;
+    }
+
+    public boolean isTasted() {
+        return tasted;
+    }
+
+    public void setTasted(boolean tasted) {
+        this.tasted = tasted;
     }
 
     int get_id() {

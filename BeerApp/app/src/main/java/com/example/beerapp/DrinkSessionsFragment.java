@@ -251,7 +251,7 @@ public class DrinkSessionsFragment extends Fragment {
     // Function for resetting the text values of the session's section
     // This function is called when the STOP SESSION button is pressed to update the stats with the new values
     // Might need to call this function when resetting the stats or the journey from settings section
-    public void updateStats() {
+    void updateStats() {
         if (dbHandler != null) {
             // Update the stats
             // Update total litres text

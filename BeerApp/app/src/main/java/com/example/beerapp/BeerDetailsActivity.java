@@ -3,6 +3,9 @@ package com.example.beerapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -10,6 +13,8 @@ import java.util.Objects;
 
 // Class used to display a beer's information and add it to user taste lists
 public class BeerDetailsActivity extends AppCompatActivity {
+
+    private Beer beerSelected; // Beer that was selected
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         TextView abvTextView = findViewById(R.id.abvTextView);
         TextView typeTextView = findViewById(R.id.typeTextView);
         ImageView beerImageView = findViewById(R.id.beerImageView);
+        Button addTastedButton = findViewById(R.id.addTastedButton);
 
         // Get Bundle from the Intent
         Bundle extras = getIntent().getExtras();
@@ -33,28 +39,54 @@ public class BeerDetailsActivity extends AppCompatActivity {
         if (extras != null)
         {
             // Retrieve data passed in the Intent
-            Beer beerSelected = (Beer) extras.getSerializable("selectedBeer");
+            beerSelected = (Beer) extras.getSerializable("selectedBeer");
 
-//            // For debugging: print in the logcat (Debug level)
-//            if (beerSelected != null) {
-//                Log.d("BeerDetails.java", beerSelected.getName());
-//            }
-//            else{
-//                Log.d("BeerDetails.java", "null Beer object");
-//            }
 
             // Updates the UI
-            assert beerSelected != null;
-            beerNameTextView.setText(beerSelected.getName());
-            manufacturerTextView.setText(String.format("%s %s", manufacturerTextView.getText(),beerSelected.getManufacturer()));
-            countryTextView.setText(String.format("%s %s", countryTextView.getText(),beerSelected.getCountry()));
-            abvTextView.setText(String.format("%s %s %%", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
-            typeTextView.setText(String.format("%s %s", typeTextView.getText(),beerSelected.getType()));
-            beerImageView.setImageResource(beerSelected.getBeerImageId());
+           if (beerSelected != null) {
+               beerNameTextView.setText(beerSelected.getName());
+               manufacturerTextView.setText(String.format("%s %s", manufacturerTextView.getText(),beerSelected.getManufacturer()));
+               countryTextView.setText(String.format("%s %s", countryTextView.getText(),beerSelected.getCountry()));
+               abvTextView.setText(String.format("%s %s %%", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
+               typeTextView.setText(String.format("%s %s", typeTextView.getText(),beerSelected.getType()));
+               beerImageView.setImageResource(beerSelected.getBeerImageId());
+
+               // Sets the text of the button
+               if (beerSelected.isTasted())
+                   addTastedButton.setText(R.string.remove_tasted);
+               else
+                   addTastedButton.setText(R.string.add_tasted);
+
+               addTastedButton.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       updateBeerTasted();
+                   }
+               });
+               // Enables the button
+               addTastedButton.setEnabled(true);
+            }
 
         }
 
     }
 
+    // Reverses the current tasted variable of the beer and updates the buttons text's
+    void updateBeerTasted(){
+        Button addTastedButton = findViewById(R.id.addTastedButton);
+        boolean tasted = beerSelected.isTasted();
+        tasted = !tasted; // Reverse the taste state
+        beerSelected.setTasted(tasted);
 
+        // If the database was successfully updated, the button's text changes
+        if (new DBHandler(this, null).updateBeerTasted(beerSelected)) {
+            // Sets the text of the button according to the current state
+            if (beerSelected.isTasted())
+                addTastedButton.setText(R.string.remove_tasted);
+            else
+                addTastedButton.setText(R.string.add_tasted);
+        }
+        else
+            Log.i("Database interaction", "Could not update beer tasted state");
+    }
 }

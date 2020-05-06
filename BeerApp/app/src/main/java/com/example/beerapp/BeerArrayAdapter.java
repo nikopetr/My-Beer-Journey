@@ -33,7 +33,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         // to avoid losing the items used on the adapter when we use the search view
         for (Beer beer : beerList)
             this.beerList.add(new Beer(beer.get_id(), beer.getName(), beer.getManufacturer(),
-                    beer.getCountry(), beer.getAbv(), beer.getType(), beer.getBeerImageId()));
+                    beer.getCountry(), beer.getAbv(), beer.getType(), beer.isTasted(), beer.getBeerImageId()));
 
         // Using a custom filter in order to be able to search for a beer and get the results based on the beerName
         beerNameFilter = new Filter() {

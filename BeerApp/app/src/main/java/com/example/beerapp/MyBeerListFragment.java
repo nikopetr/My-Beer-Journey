@@ -34,7 +34,7 @@ public class MyBeerListFragment extends Fragment {
 
         // Gets the dbHandler from the main activity
         DBHandler dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
-        this.beerList = dbHandler.getAllBeers();
+        this.beerList = dbHandler.getTastedBeers();
 
         GridView beerListView = rootView.findViewById(R.id.beerGridView);
         // Initializing Array adapter for the beer list
