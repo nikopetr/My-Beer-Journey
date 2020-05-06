@@ -13,6 +13,7 @@ public class ConfirmationDialog extends DialogFragment {
     private boolean resetWholeJourney;
     private DBHandler dbHandler;
 
+    // Constructor
     ConfirmationDialog(boolean resetWholeJourney, DBHandler dbHandler) {
         this.resetWholeJourney = resetWholeJourney;
         this.dbHandler = dbHandler;
@@ -23,16 +24,20 @@ public class ConfirmationDialog extends DialogFragment {
     public Dialog onCreateDialog (Bundle savedInstanceState) {
         // Prevent the fragment from being destroyed on screen orientation change
         setRetainInstance(true);
+        // Initialize the builder for the alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // If the user pressed the reset journey button
         if (resetWholeJourney) {
             builder.setTitle(R.string.dialog_title_journey_reset);
             builder.setMessage(R.string.dialog_message_journey_reset);
+            // Button Start Over
             builder.setPositiveButton(R.string.dialog_positive_button_journey, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dbHandler.resetUserData();
                 }
             });
+            // Button Cancel
             builder.setNegativeButton(R.string.dialog_negative_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -40,14 +45,17 @@ public class ConfirmationDialog extends DialogFragment {
                 }
             });
         } else {
+            // If the user pressed the reset stats button
             builder.setTitle(R.string.dialog_title_stats_reset);
             builder.setMessage(R.string.dialog_message_stats_reset);
+            // Button Reset Stats
             builder.setPositiveButton(R.string.dialog_positive_button_stats, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dbHandler.resetUserStats();
                 }
             });
+            // Button Cancel
             builder.setNegativeButton(R.string.dialog_negative_button, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -67,4 +75,5 @@ public class ConfirmationDialog extends DialogFragment {
         }
         super.onDestroyView();
     }
+
 }
