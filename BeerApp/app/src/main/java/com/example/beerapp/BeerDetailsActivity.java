@@ -2,18 +2,22 @@ package com.example.beerapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Objects;
 
 // Class used to display a beer's information and add it to user taste lists
 public class BeerDetailsActivity extends AppCompatActivity {
 
+    private Toast toast;
     private Beer beerSelected; // Beer that was selected
 
     @Override
@@ -81,10 +85,26 @@ public class BeerDetailsActivity extends AppCompatActivity {
         // If the database was successfully updated, the button's text changes
         if (new DBHandler(this, null).updateBeerTasted(beerSelected)) {
             // Sets the text of the button according to the current state
-            if (beerSelected.isTasted())
+            if (beerSelected.isTasted()) {
+                if (toast!=null)
+                {
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getApplicationContext(), "Beer added to Tasted list", Toast.LENGTH_SHORT); //add toast message for add beer
+                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 200);
+                toast.show(); //show toast message
                 addTastedButton.setText(R.string.remove_tasted);
-            else
+            }
+            else {
+                if (toast!=null)
+                {
+                    toast.cancel();
+                }
+                toast = Toast.makeText(getApplicationContext(), "Beer removed from Tasted list",Toast.LENGTH_SHORT ); //add toast message for remove beer
+                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 200);
+                toast.show(); //show toast message
                 addTastedButton.setText(R.string.add_tasted);
+            }
         }
         else
             Log.i("Database interaction", "Could not update beer tasted state");

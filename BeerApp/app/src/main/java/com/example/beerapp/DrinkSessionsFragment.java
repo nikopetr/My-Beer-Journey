@@ -4,12 +4,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +19,8 @@ import androidx.fragment.app.Fragment;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 // Fragment used for displaying user's drinking stats, and for having a new drink session
 public class DrinkSessionsFragment extends Fragment {
@@ -31,6 +35,7 @@ public class DrinkSessionsFragment extends Fragment {
     private boolean isDrinking; // Represents if the user is currently in a drink session
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
     private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER) // TODO
+    private Toast toast;
 
      public DrinkSessionsFragment( ) {
          // Reburied empty constructor to call Fragment's constructor
@@ -58,8 +63,24 @@ public class DrinkSessionsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // If the user is drinking then we stop the session, otherwise a session starts
-                if (isDrinking)
-                    stopDrinkSession();
+                if (isDrinking){
+                    if (getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
+                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+                            toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER | Gravity.RIGHT, 120, 250); //add toast message for stop of a session
+                            toast.show(); //show toast message
+                        }
+                    }
+                    else
+                    {
+                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+                            toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT); //add toast message for start of a
+                            toast.setGravity(Gravity.CENTER | Gravity.RIGHT, 50, -130);
+                            toast.show(); //show toast message
+                        }
+                    }
+                stopDrinkSession();
+                }
                 else
                     startDrinkSession(SystemClock.elapsedRealtime());
             }
