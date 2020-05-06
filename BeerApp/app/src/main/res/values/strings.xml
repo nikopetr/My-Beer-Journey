@@ -49,4 +49,13 @@
     <string name="second_answer">Just head to the Drink Session section and when you start drinking beer press the START SESSION button and select the beer you are drinking. When you are done drinking press the STOP SESSION button to save your drinking session.</string>
     <string name="third_question">3) Can I reset my stats?</string>
     <string name="third_answer">If you want to reset only your stats but not your tasted beers count press on the RESET STATS button in Settings section. If you want to start your beer journey from the beginning press on the START OVER button.</string>
+
+    <!-- String for confirmation dialog  -->
+    <string name="dialog_title_journey_reset">Start Over</string>
+    <string name="dialog_message_journey_reset">You are about to reset all the progress you did so far. That means that the tasted beers list, as well as the total time and litres will be reset 0.</string>
+    <string name="dialog_title_stats_reset">Reset Stats</string>
+    <string name="dialog_message_stats_reset">You are about to reset your stats. That means that the total time and litres will be reset to 0. This will not reset your tasted beers list.</string>
+    <string name="dialog_positive_button_journey">Start Over</string>
+    <string name="dialog_positive_button_stats">Reset Stats</string>
+    <string name="dialog_negative_button">Cancel</string>
 </resources>
