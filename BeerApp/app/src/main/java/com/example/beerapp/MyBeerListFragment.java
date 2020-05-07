@@ -6,11 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,11 +41,20 @@ public class MyBeerListFragment extends Fragment {
         // Gets the dbHandler from the main activity
         DBHandler dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
         this.beerList = dbHandler.getTastedBeers();
+        // Sort the beers by ascending order by name
+        Collections.sort(this.beerList, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
 
         // Initializing selected beer as null
         this.beerSelected = null;
 
         GridView beerListView = rootView.findViewById(R.id.beerGridView);
+        beerListView.setEmptyView(rootView.findViewById(R.id.emptyTextView));
+
         // Initializing Array adapter for the beer list
         beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, R.layout.grid_beer_item); // Array adapter for the beer list
         beerListView.setAdapter(beerListArrayAdapter);

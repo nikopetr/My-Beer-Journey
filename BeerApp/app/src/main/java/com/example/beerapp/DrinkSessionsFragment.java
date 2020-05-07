@@ -66,21 +66,21 @@ public class DrinkSessionsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // If the user is drinking then we stop the session, otherwise a session starts
+                Button button = rootView.findViewById(R.id.addPintButton);
+                int heightOffset = button.getHeight();
                 if (isDrinking){
                     if (getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
-                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE)
-                        {
+                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
                             toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER | Gravity.RIGHT, 120, 250); //add toast message for stop of a session
+                            toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, heightOffset * 2); //add toast message for stop of a session
                             toast.show(); //show toast message
                         }
                     }
                     else
                     {
-                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE)
-                        {
+                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
                             toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT); //add toast message for start of a
-                            toast.setGravity(Gravity.CENTER | Gravity.RIGHT, 50, -130);
+                            toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, heightOffset);
                             toast.show(); //show toast message
                         }
                     }

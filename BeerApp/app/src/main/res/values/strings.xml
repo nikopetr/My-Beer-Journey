@@ -58,4 +58,7 @@
     <string name="dialog_positive_button_journey">Start Over</string>
     <string name="dialog_positive_button_stats">Reset Stats</string>
     <string name="dialog_negative_button">Cancel</string>
+
+    <!-- String for beer list if it is empty  -->
+    <string name="empty_list">No beers in my list to show</string>
 </resources>

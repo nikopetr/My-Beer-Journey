@@ -11,6 +11,9 @@ import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +39,13 @@ public class BeerCatalogFragment extends Fragment {
         // Gets the dbHandler from the main activity
         DBHandler dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
         this.beerList = dbHandler.getAllBeers();
+        // Sort the beers by ascending order by name
+        Collections.sort(this.beerList, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
 
         // Initializing selected beer as null
         this.beerSelected = null;

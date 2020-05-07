@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
@@ -34,7 +32,6 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_TASTED = "tasted";
     // For user table
     private static final String TABLE_USER = "user";
-    private static final String COLUMN_BEERS_TASTED = "tasted"; //TODO Change database user column taste to beers_tasted ( from DB and then from here)
     private static final String COLUMN_LITRES_CONSUMED = "litres";
     private static final String COLUMN_TOTAL_TIME = "time";
     private static final String COLUMN_BEST_SESSION = "best_session";
@@ -150,13 +147,7 @@ public class DBHandler extends SQLiteOpenHelper {
             beers.add(beer);
         }
         cursor.close();
-        // Sort the beers by ascending order by name
-        Collections.sort(beers, new Comparator<Beer>() {
-            @Override
-            public int compare(Beer beer1, Beer beer2) {
-                return beer1.getName().compareTo(beer2.getName());
-            }
-        });
+
         return beers;
     }
 
@@ -187,13 +178,6 @@ public class DBHandler extends SQLiteOpenHelper {
             beers.add(beer);
         }
         cursor.close();
-        // Sort the beers by ascending order by name
-        Collections.sort(beers, new Comparator<Beer>() {
-            @Override
-            public int compare(Beer beer1, Beer beer2) {
-                return beer1.getName().compareTo(beer2.getName());
-            }
-        });
         return beers;
     }
 
@@ -215,12 +199,11 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            double alreadyDrankLitres = cursor.getDouble(2);
+            double alreadyDrankLitres = cursor.getDouble(1);
             alreadyDrankLitres += litres;
             ContentValues litresUpdate = new ContentValues();
             litresUpdate.put(COLUMN_LITRES_CONSUMED, alreadyDrankLitres);
             db.update(TABLE_USER, litresUpdate, null, null);
-            //Log.d("LITRES","ADDED");
             cursor.close();
             return true;
         }
@@ -235,7 +218,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            long alreadyTimeSpentDrinking = cursor.getLong(3);
+            long alreadyTimeSpentDrinking = cursor.getLong(2);
             alreadyTimeSpentDrinking += timeSpentDrinking;
             ContentValues timeUpdate = new ContentValues();
             timeUpdate.put(COLUMN_TOTAL_TIME, alreadyTimeSpentDrinking);
@@ -254,7 +237,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst())
-            bestSession = cursor.getDouble(4);
+            bestSession = cursor.getDouble(3);
         cursor.close();
         return bestSession;
     }
@@ -276,9 +259,15 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Return the total number of tasted beers
-    // TODO
     int getTotalTastedBeers() {
-        return 0;
+        String query = "SELECT COUNT(*) FROM " + TABLE_BEERS + " WHERE " + COLUMN_TASTED + " = 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        int totalBeersTasted = 0;
+        if (cursor.moveToFirst())
+            totalBeersTasted = cursor.getInt(0);
+        cursor.close();
+        return totalBeersTasted;
     }
 
     // Return total litres that were consumed
@@ -287,7 +276,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            double totalLitres = cursor.getDouble(2);
+            double totalLitres = cursor.getDouble(1);
             cursor.close();
             return totalLitres;
         }
@@ -301,7 +290,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            long totalTime = cursor.getLong(3);
+            long totalTime = cursor.getLong(2);
             cursor.close();
             return totalTime;
         }
@@ -315,8 +304,8 @@ public class DBHandler extends SQLiteOpenHelper {
     boolean resetUserData() {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_BEERS_TASTED, 0);
-        return (db.update(TABLE_USER, cv, null, null) >=1 && resetUserStats());
+        cv.put(COLUMN_TASTED, 0);
+        return (db.update(TABLE_BEERS, cv, null, null) >=1 && resetUserStats());
     }
 
     // Reset user drinking session stats,
