@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.SearchView;
 
 import androidx.fragment.app.Fragment;
@@ -15,11 +14,14 @@ import androidx.fragment.app.Fragment;
 import java.util.List;
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class MyBeerListFragment extends Fragment {
 
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> beerList; // List including the Beer objects
+    private Beer beerSelected; // The beer that the user selects to see it's details
 
     public MyBeerListFragment( ) {
         // Required empty constructor to call Fragment's constructor
@@ -36,6 +38,9 @@ public class MyBeerListFragment extends Fragment {
         DBHandler dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
         this.beerList = dbHandler.getTastedBeers();
 
+        // Initializing selected beer as null
+        this.beerSelected = null;
+
         GridView beerListView = rootView.findViewById(R.id.beerGridView);
         // Initializing Array adapter for the beer list
         beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, R.layout.grid_beer_item); // Array adapter for the beer list
@@ -43,7 +48,7 @@ public class MyBeerListFragment extends Fragment {
         beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                seeBeerDetailsScreen(beerList.get(position));
+                seeBeerDetailsScreen(position);
             }
         });
 
@@ -70,16 +75,36 @@ public class MyBeerListFragment extends Fragment {
         return rootView;
     }
 
+    // After returning from BeerDetailsActivity,
+    // updates the array adapter if changes occurred
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // If this is the code assigned to BeerDetailsActivity and returning Intent succeeded
+        if ((requestCode == 5) && (resultCode == RESULT_OK))
+        {
+            // Get saved beer's taste state from the returning Intent
+            boolean tasted = Objects.requireNonNull(data.getExtras()).getBoolean("tasted");
+
+            // Update the beerListArrayAdapter's list if the beer is removed from the tasted
+            if (!tasted)
+            {
+                beerListArrayAdapter.remove(beerSelected);
+                beerListArrayAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
     // Method for creating intent and passing the Beer object to the new activity
-    private void seeBeerDetailsScreen(Beer beerSelected)
+    private void seeBeerDetailsScreen(int position )
     {
+        beerSelected = beerList.get(position);
         // Create the Intent to start new Activity
         Intent intent = new Intent(getContext(), BeerDetailsActivity.class);
         // Pass data to the  Activity through the Intent
         intent.putExtra("selectedBeer", beerSelected);
         // Ask Android to start the new Activity
-        startActivity(intent);
+        startActivityForResult(intent, 5);
     }
 
 }

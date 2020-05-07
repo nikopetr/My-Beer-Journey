@@ -13,7 +13,6 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
 import java.util.Objects;
 
 
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
         if (savedInstanceState != null){
-           // Retrieve data from the Bundle and restore the dynamic state of the UI
+            // Retrieve data from the Bundle and restore the dynamic state of the UI
             actionBar.setTitle(savedInstanceState.getCharSequence("actonBarTitleSaved"));
         }
         else {
@@ -80,22 +79,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Method called to show an existing fragment, found by it's tag and transact to it
-    private void showFragment(String fragmentTag) {
+    private void replaceFragment(String fragmentTag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // Hiding the current visible fragment
-        transaction.hide(Objects.requireNonNull(getCurrentFragment()));
-        transaction.show(Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(fragmentTag)));
+        transaction.replace(R.id.container, Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(fragmentTag)), fragmentTag);
         transaction.addToBackStack(null);
         transaction.commit();
         actionBar.setTitle(fragmentTag);
     }
 
     // Method called to add a fragment to the manager and transact to it
-    private void addFragment(Fragment fragment, String fragmentTag) {
+    private void replaceNewFragment(Fragment fragment, String fragmentTag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        // Hiding the current visible fragment
-        transaction.hide(Objects.requireNonNull(getCurrentFragment()));
-        transaction.add(R.id.container, fragment, fragmentTag);
+        transaction.replace(R.id.container, fragment, fragmentTag);
         transaction.addToBackStack(null);
         transaction.commit();
         actionBar.setTitle(fragmentTag);
@@ -111,11 +106,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.beerCatalogItem:
                 if (fragmentManager.findFragmentByTag(BEER_CATALOG_TITLE) != null) {
                     // If a BeerCatalogFragment already exists, show it.
-                    showFragment(BEER_CATALOG_TITLE);
+                    replaceFragment(BEER_CATALOG_TITLE);
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new BeerCatalogFragment(), BEER_CATALOG_TITLE);
+                    replaceNewFragment(new BeerCatalogFragment(), BEER_CATALOG_TITLE);
                 }
                 return true;
             case R.id.drinkSessionsItem:
@@ -124,45 +119,35 @@ public class MainActivity extends AppCompatActivity {
                     DrinkSessionsFragment fragment = (DrinkSessionsFragment) getSupportFragmentManager().findFragmentByTag(DRINK_SESSIONS_TITLE);
                     if (fragment != null) fragment.updateStats();
                     // If a DrinkSessionsFragment already exists, show it.
-                    showFragment(DRINK_SESSIONS_TITLE);
+                    replaceFragment(DRINK_SESSIONS_TITLE);
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new DrinkSessionsFragment(), DRINK_SESSIONS_TITLE);
+                    replaceNewFragment(new DrinkSessionsFragment(), DRINK_SESSIONS_TITLE);
                 }
                 return true;
             case R.id.settingsItem:
                 if (fragmentManager.findFragmentByTag(SETTINGS_TITLE) != null) {
                     // If the fragment already exists, show it.
-                    showFragment((SETTINGS_TITLE));
+                    replaceFragment((SETTINGS_TITLE));
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new SettingsFragment(), SETTINGS_TITLE);
+                    replaceNewFragment(new SettingsFragment(), SETTINGS_TITLE);
                 }
                 return true;
             case R.id.myBeerListItem:
                 if (fragmentManager.findFragmentByTag(MY_BEER_LIST) != null) {
                     // If the fragment already exists, show it.
-                    showFragment((MY_BEER_LIST));
+                    replaceFragment((MY_BEER_LIST));
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    addFragment(new MyBeerListFragment(), MY_BEER_LIST);
+                    replaceNewFragment(new MyBeerListFragment(), MY_BEER_LIST);
                 }
                 return true;
         }
         return false;
-    }
-
-    // Returns the current visible fragment
-    private Fragment getCurrentFragment(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        for(Fragment fragment : fragments)
-            if(fragment != null && fragment.isVisible())
-                return fragment;
-        return null;
     }
 
     DBHandler getDbHandler()
@@ -170,12 +155,5 @@ public class MainActivity extends AppCompatActivity {
         return dbHandler;
     }
 
-    // Overwritten function in oder to finish activity if back is pressed and the fragment stack has only 1 fragment
-    @Override
-    public void onBackPressed(){
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1)
-            finish();
-        else
-            super.onBackPressed();
-    }
+
 }

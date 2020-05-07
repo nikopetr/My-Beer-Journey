@@ -36,9 +36,18 @@ public class DrinkSessionsFragment extends Fragment {
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
     private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER) // TODO
     private Toast toast;
+    private ChronometerHelper chronometerHelper;
 
      public DrinkSessionsFragment( ) {
          // Reburied empty constructor to call Fragment's constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.chronometerHelper = new ChronometerHelper();
+        this.isDrinking = false;
+        this.totalLitresDrank = 0;
     }
 
     @Override
@@ -47,25 +56,20 @@ public class DrinkSessionsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
         // Gets the dbHandler from the main activity
         this.dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
-        return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // Initialize the chronometer
+        // Initialize the session's chronometer
         this.sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
 
         // Find the START/STOP SESSION button and set the onClick methods to be called
         Button sessionButton = rootView.findViewById(R.id.startSessionButton);
+        sessionButton.setBackgroundResource(R.drawable.custom_start_button);
         sessionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // If the user is drinking then we stop the session, otherwise a session starts
                 if (isDrinking){
                     if (getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
-                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE)
+                        {
                             toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT);
                             toast.setGravity(Gravity.CENTER | Gravity.RIGHT, 120, 250); //add toast message for stop of a session
                             toast.show(); //show toast message
@@ -73,13 +77,14 @@ public class DrinkSessionsFragment extends Fragment {
                     }
                     else
                     {
-                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
+                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE)
+                        {
                             toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT); //add toast message for start of a
                             toast.setGravity(Gravity.CENTER | Gravity.RIGHT, 50, -130);
                             toast.show(); //show toast message
                         }
                     }
-                stopDrinkSession();
+                    stopDrinkSession();
                 }
                 else
                     startDrinkSession(SystemClock.elapsedRealtime());
@@ -113,6 +118,20 @@ public class DrinkSessionsFragment extends Fragment {
         // Initialize the best session text
         ((TextView)rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
 
+        if (isDrinking)
+        {
+            // If the user is currently drinking,
+            // set the chronometer's base to the previous base.
+            startDrinkSession(chronometerHelper.getStartTime());
+            ((TextView)rootView.findViewById(R.id.litresDrankTextView)).setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
+
+        }
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
             this.isDrinking = savedInstanceState.getBoolean("isDrinking");
             this.totalLitresDrank = savedInstanceState.getDouble("totalLitresDrank");
@@ -122,15 +141,6 @@ public class DrinkSessionsFragment extends Fragment {
                 startDrinkSession(savedInstanceState.getLong("chronometerBase"));
                 ((TextView)rootView.findViewById(R.id.litresDrankTextView)).setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
             }
-            else
-            {
-                disableSessionComponents();
-            }
-        }
-        else
-        {
-            this.isDrinking = false;
-            this.totalLitresDrank = 0;
         }
     }
 
@@ -150,6 +160,8 @@ public class DrinkSessionsFragment extends Fragment {
         sessionChronometer.setBase(baseTime);
         // Start the chronometer
         sessionChronometer.start();
+        // Sets the start time for the chronometer helper
+        chronometerHelper.setStartTime(baseTime);
         // Enable the chronometer
         sessionChronometer.setEnabled(true);
         // Change the button to show "STOP SESSION" with red background
@@ -209,6 +221,7 @@ public class DrinkSessionsFragment extends Fragment {
 
         // Reset the variables' values
         sessionChronometer.setBase(SystemClock.elapsedRealtime());
+        chronometerHelper.setStartTime(SystemClock.elapsedRealtime());
         totalLitresDrank = 0;
         // Stop the chronometer
         sessionChronometer.stop();
