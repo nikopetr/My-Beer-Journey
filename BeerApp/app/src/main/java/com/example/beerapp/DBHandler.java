@@ -298,6 +298,30 @@ public class DBHandler extends SQLiteOpenHelper {
         return 0;
     }
 
+    // Return the username of the user
+    String getUserName(){
+        String query = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            String userName = cursor.getString(4);
+            cursor.close();
+            return userName;
+        }
+        cursor.close();
+        return null;
+    }
+
+    // Updates the user's name in user table
+    // returns true if a row from the table was affected
+    boolean updateUserName(String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_NAME, name);
+        return (db.update(TABLE_USER, cv, null, null) >=1);
+    }
+
+
     // Reset the whole user's journey data from the db.
     // Including beers tasted, and user stats
     // returns true if a row from the table was affected

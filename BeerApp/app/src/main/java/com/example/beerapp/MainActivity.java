@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
 
@@ -26,7 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     // DB Handler for all Database Stuff
     private DBHandler dbHandler;
-    private ActionBar actionBar; // A primary toolbar within the activity used to display the information of each fragment
+    // The navigation view of the activity
+    private BottomNavigationView navigationView;
+    // A primary toolbar within the activity used to display the information of each fragment
+    private ActionBar actionBar;
+    private String currentFragmentTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize DB Handler
         dbHandler = new DBHandler(this, null);
+
+//        // If the username is null, redirecting user to the welcome screen which is used on the first time the app launches to set his "name"
+//        if(dbHandler.getUserName() == null)
+//        {
+//            Intent intent = new Intent(this, WelcomeScreenActivity.class);
+//            // Ask Android to start the new Activity
+//            startActivityForResult(intent, 5);
+//        }
 
         // Navigation item listener used for the bottom navigation view
         BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener
@@ -48,18 +63,52 @@ public class MainActivity extends AppCompatActivity {
         };
 
         actionBar = getSupportActionBar(); // Initializing toolbar
-        BottomNavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView = findViewById(R.id.navigationView);
         navigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
         if (savedInstanceState != null){
             // Retrieve data from the Bundle and restore the dynamic state of the UI
-            actionBar.setTitle(savedInstanceState.getCharSequence("actonBarTitleSaved"));
+            currentFragmentTag = (String)savedInstanceState.getCharSequence("actonBarTitleSaved");
+            actionBar.setTitle(currentFragmentTag);
         }
         else {
+            currentFragmentTag = BEER_CATALOG_TITLE;
             // Initialize the UI
             actionBar.setTitle(BEER_CATALOG_TITLE); // Changes the title of the toolbar
             getSupportFragmentManager().beginTransaction().add(R.id.container, new BeerCatalogFragment(), BEER_CATALOG_TITLE).commit();
         }
+
+        // Change the title and selected navigation item when the fragment is changed when the back button is pressed
+        getSupportFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                // The active fragment
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+                assert fragment != null;
+                if (fragment.getTag() != null) {
+                    // Set the title based on the active fragment
+                    actionBar.setTitle(fragment.getTag());
+                    switch(fragment.getTag()) {
+                        // If "Beer Catalog" fragment is active set the menu item to index 0
+                        case BEER_CATALOG_TITLE:
+                            navigationView.getMenu().getItem(0).setChecked(true);
+                            break;
+                        // If "My Beer List" fragment is active set the menu item to index 1
+                        case MY_BEER_LIST:
+                            navigationView.getMenu().getItem(1).setChecked(true);
+                            break;
+                        // If "My Drink Sessions" fragment is active set the menu item to index 2
+                        case DRINK_SESSIONS_TITLE:
+                            navigationView.getMenu().getItem(2).setChecked(true);
+                            break;
+                        // If "Settings" fragment is active set the menu item to index 3
+                        case SETTINGS_TITLE:
+                            navigationView.getMenu().getItem(3).setChecked(true);
+                            break;
+                    }
+                }
+            }
+        });
 
     }
 
@@ -80,11 +129,16 @@ public class MainActivity extends AppCompatActivity {
 
     // Method called to show an existing fragment, found by it's tag and transact to it
     private void replaceFragment(String fragmentTag) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(fragmentTag)), fragmentTag);
-        transaction.addToBackStack(null);
-        transaction.commit();
-        actionBar.setTitle(fragmentTag);
+
+        if (!currentFragmentTag.equals(fragmentTag))
+        {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, Objects.requireNonNull(getSupportFragmentManager().findFragmentByTag(fragmentTag)), fragmentTag);
+            transaction.addToBackStack(null);
+            transaction.commit();
+            actionBar.setTitle(fragmentTag);
+            currentFragmentTag = fragmentTag;
+        }
     }
 
     // Method called to add a fragment to the manager and transact to it
@@ -94,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
         actionBar.setTitle(fragmentTag);
+        currentFragmentTag = fragmentTag;
     }
 
     // Method used for transitioning from one fragment to another without recreating the previous fragment
