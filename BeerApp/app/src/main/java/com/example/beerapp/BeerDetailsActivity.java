@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,8 +26,9 @@ public class BeerDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_details);
 
-        // Hides title bar from the Android Activity
-        Objects.requireNonNull(this.getSupportActionBar()).hide();
+        //shows the back button
+        getSupportActionBar().setTitle(" ");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Obtain references to objects
         TextView beerNameTextView = findViewById(R.id.beerNameTextView);
@@ -76,6 +78,15 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
     }
 
+    //method for go-back button arrow
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==android.R.id.home)
+        {
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
     // Method used to load the currently used fragment when the activity loads after an instance save
     @Override
     protected void onSaveInstanceState(Bundle outState) {
