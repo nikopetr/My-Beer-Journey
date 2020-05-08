@@ -61,4 +61,11 @@
 
     <!-- String for beer list if it is empty  -->
     <string name="empty_list">No beers in my list to show</string>
+
+    <!-- Strings for activity welcome screen -->
+    <string name="welcome_message">Welcome to My Beer Journey!</string>
+    <string name="enter_name">Please enter your name to start your own journey:</string>
+    <string name="name_edit">Name</string>
+    <string name="start_journey_button">Start Journey</string>
+    <string name="beer_logo_caption">Beer Logo</string>
 </resources>
