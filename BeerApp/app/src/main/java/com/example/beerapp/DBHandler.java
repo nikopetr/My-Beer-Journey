@@ -29,6 +29,8 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String COLUMN_COUNTRY = "country";
     private static final String COLUMN_ABV = "abv";
     private static final String COLUMN_TYPE = "type";
+    private static final String COLUMN_IMAGE = "image";
+    private static final String COLUMN_IMAGE_HD = "imagehd";
     private static final String COLUMN_TASTED = "tasted";
     // For user table
     private static final String TABLE_USER = "user";
@@ -136,13 +138,8 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
             beer.setTasted(cursor.getInt(6) == 1);
-            // Get the the name of the beer in the correct format as it is in drawable folder
-            // Remove spaces, -, parenthesis, . and '
-            // Because you cannot have these in the name of a file in the drawable folder
-            // Transform the formatted name to lowercase, because you cannot use uppercase in drawable
-            String drawableBeerName = beer.getName().replaceAll("[().' -]", "").toLowerCase();
-            int imageId = context.getResources().getIdentifier(drawableBeerName, "drawable", context.getPackageName());
-            beer.setBeerImageId(imageId);
+            beer.setBeerImage(setBeerImage(cursor.getInt(0)));
+            beer.setBeerImageHD(setBeerImageHD(cursor.getInt(0)));
             // Add the beer to the beers list
             beers.add(beer);
         }
@@ -167,13 +164,8 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
             beer.setTasted(cursor.getInt(6) == 1);
-            // Get the the name of the beer in the correct format as it is in drawable folder
-            // Remove spaces, -, parenthesis, . and '
-            // Because you cannot have these in the name of a file in the drawable folder
-            // Transform the formatted name to lowercase, because you cannot use uppercase in drawable
-            String drawableBeerName = beer.getName().replaceAll("[().' -]", "").toLowerCase();
-            int imageId = context.getResources().getIdentifier(drawableBeerName, "drawable", context.getPackageName());
-            beer.setBeerImageId(imageId);
+            beer.setBeerImage(setBeerImage(cursor.getInt(0)));
+            beer.setBeerImageHD(setBeerImageHD(cursor.getInt(0)));
             // Add the beer to the beers list
             beers.add(beer);
         }
@@ -190,6 +182,38 @@ public class DBHandler extends SQLiteOpenHelper {
 
         // If a row was affected return true
         return (db.update(TABLE_BEERS, cv, COLUMN_ID + "=" + beer.get_id(), null) >= 1);
+    }
+
+
+    // Set the beer image to the beer
+    private byte[] setBeerImage(int beerId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + COLUMN_IMAGE + " FROM " + TABLE_BEERS + " WHERE " + COLUMN_ID + " = " + beerId;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            byte[] imgByte = cursor.getBlob(0);
+            cursor.close();
+            if (imgByte != null)
+                return imgByte;
+        }
+        cursor.close();
+        return null;
+    }
+
+    private byte[] setBeerImageHD(int beerId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + COLUMN_IMAGE_HD + " FROM " + TABLE_BEERS + " WHERE " + COLUMN_ID + " = " + beerId;
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            byte[] imgByte = cursor.getBlob(0);
+            cursor.close();
+            if (imgByte != null)
+                return imgByte;
+        }
+        cursor.close();
+        return null;
     }
 
     // Add session's litres to the DB
@@ -304,9 +328,9 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            String userName = cursor.getString(4);
+            //String userName = cursor.getString(4);
             cursor.close();
-            return userName;
+            return "userName";
         }
         cursor.close();
         return null;

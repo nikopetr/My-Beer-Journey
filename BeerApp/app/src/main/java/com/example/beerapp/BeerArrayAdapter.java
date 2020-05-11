@@ -33,7 +33,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         // to avoid losing the items used on the adapter when we use the search view
         for (Beer beer : beerList)
             this.beerList.add(new Beer(beer.get_id(), beer.getName(), beer.getManufacturer(),
-                    beer.getCountry(), beer.getAbv(), beer.getType(), beer.isTasted(), beer.getBeerImageId()));
+                    beer.getCountry(), beer.getAbv(), beer.getType(), beer.isTasted(), beer.getBeerImageSerial(), beer.getBeerImageHDSerial()));
 
         // Using a custom filter in order to be able to search for a beer and get the results based on the beerName
         beerNameFilter = new Filter() {
@@ -102,7 +102,8 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         TextView beerNameTextView = beerItemView.findViewById(R.id.beetItemTextView);
         ImageView beerImageView = beerItemView.findViewById(R.id.beerItemImageView);
         beerNameTextView.setText(adaptedBeerList.get(position).getName());
-        beerImageView.setImageResource(adaptedBeerList.get(position).getBeerImageId());
+        if (beerImageView != null && adaptedBeerList != null)
+            beerImageView.setImageBitmap(adaptedBeerList.get(position).getBeerImage());
         return  beerItemView;
     }
 }

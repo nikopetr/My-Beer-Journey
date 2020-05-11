@@ -59,7 +59,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
             countryTextView.setText(String.format("%s %s", countryTextView.getText(),beerSelected.getCountry()));
             abvTextView.setText(String.format("%s %s %%", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
             typeTextView.setText(String.format("%s %s", typeTextView.getText(),beerSelected.getType()));
-            beerImageView.setImageResource(beerSelected.getBeerImageId());
+            beerImageView.setImageBitmap(beerSelected.getBeerImageHD());
 
             // Sets the text of the button
             if (beerSelected.isTasted())

@@ -2,9 +2,8 @@
     <string name="app_name">Beer App</string>
     <string name="beer_Catalog_item_string">Beer Catalog</string>
     <string name="drink_sessions_item_string">Drink Sessions</string>
-    <string name="my_beer_list_item_string">My Beer List</string>
+    <string name="my_beer_list_item_string">Tasted Beers</string>
     <string name="settings_item_string">Settings</string>
-
     <string name="search_title_string">Search</string>
 
    <!-- Strings for activity_beer -->

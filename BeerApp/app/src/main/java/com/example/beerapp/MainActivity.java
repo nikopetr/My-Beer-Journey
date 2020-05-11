@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String BEER_CATALOG_TITLE = "Beer Catalog";
     private static final String DRINK_SESSIONS_TITLE = "My Drink Sessions";
     private static final String SETTINGS_TITLE = "Settings";
-    private static final String MY_BEER_LIST = "My Beer List";
+    private static final String MY_BEER_LIST = "Tasted Beers";
 
     // DB Handler for all Database Stuff
     private DBHandler dbHandler;
