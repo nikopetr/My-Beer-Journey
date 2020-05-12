@@ -2,6 +2,7 @@ package com.example.beerapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,8 +27,8 @@ public class BeerCatalogFragment extends Fragment {
     private List<Beer> beerList; // List including the Beer objects
     private Beer beerSelected; // The beer that the user selects to see it's details
 
-    public BeerCatalogFragment( ) {
-        // Required empty constructor to call Fragment's constructor
+    public BeerCatalogFragment(){
+        // req empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
     }
 
     @Override
@@ -36,19 +37,12 @@ public class BeerCatalogFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
-        // Gets the dbHandler from the main activity
-        DBHandler dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
-        this.beerList = dbHandler.getAllBeers();
-        // Sort the beers by ascending order by name
-        Collections.sort(this.beerList, new Comparator<Beer>() {
-            @Override
-            public int compare(Beer beer1, Beer beer2) {
-                return beer1.getName().compareTo(beer2.getName());
-            }
-        });
-
         // Initializing selected beer as null
         this.beerSelected = null;
+
+        if (savedInstanceState != null) {
+            beerList = (ArrayList<Beer>) savedInstanceState.getSerializable("beerList");
+        }
 
         ListView beerListView = rootView.findViewById(R.id.beerListView);
         // Initializing Array adapter for the beer list
@@ -57,7 +51,7 @@ public class BeerCatalogFragment extends Fragment {
         beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                seeBeerDetailsScreen(position);
+                moveToBeerDetailsScreen(position);
             }
         });
 
@@ -89,7 +83,13 @@ public class BeerCatalogFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
 
+    // Used to save the beer list
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("beerList", (ArrayList<Beer>)beerList);
     }
 
     // After returning from BeerDetailsActivity,
@@ -105,8 +105,13 @@ public class BeerCatalogFragment extends Fragment {
             beerSelected.setTasted(tasted);
         }
     }
+
+    void setBeerList(List<Beer> beerList) {
+        this.beerList = beerList;
+    }
+
     // Method for creating intent and passing the Beer object to the new activity
-    private void seeBeerDetailsScreen(int position)
+    private void moveToBeerDetailsScreen(int position)
     {
         beerSelected = beerList.get(position);
         // Create the Intent to start new Activity
