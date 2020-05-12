@@ -3,6 +3,8 @@ package com.example.beerapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,14 +22,16 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
     private Toast toast;
     private Beer beerSelected; // Beer that was selected
+    private DBHandler dbHandler; // DB Handler for the database interaction
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_details);
 
-        //shows the back button
-        getSupportActionBar().setTitle(" ");
+        // Shows the back button on top of action bar
+        Objects.requireNonNull(getSupportActionBar()).setTitle(" ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Obtain references to objects
@@ -39,6 +43,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         ImageView beerImageView = findViewById(R.id.beerImageView);
         Button addTastedButton = findViewById(R.id.addTastedButton);
 
+        dbHandler = new DBHandler(this, null);
 
         if (savedInstanceState != null)
             beerSelected =(Beer)savedInstanceState.getSerializable("selectedBeer");
@@ -59,7 +64,9 @@ public class BeerDetailsActivity extends AppCompatActivity {
             countryTextView.setText(String.format("%s %s", countryTextView.getText(),beerSelected.getCountry()));
             abvTextView.setText(String.format("%s %s %%", abvTextView.getText(),String.valueOf(beerSelected.getAbv())));
             typeTextView.setText(String.format("%s %s", typeTextView.getText(),beerSelected.getType()));
-            beerImageView.setImageBitmap(beerSelected.getBeerImageHD());
+            byte[] beerImageBytes= dbHandler.getBeerImage(beerSelected.get_id(),true);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(beerImageBytes, 0, beerImageBytes.length);
+            beerImageView.setImageBitmap(bitmap);
 
             // Sets the text of the button
             if (beerSelected.isTasted())
@@ -105,7 +112,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         beerSelected.setTasted(tasted);
 
         // If the database was successfully updated, the button's text changes
-        if (new DBHandler(this, null).updateBeerTasted(beerSelected))
+        if (dbHandler.updateBeerTasted(beerSelected))
         {
             // Sets the text of the button according to the current state
             if (beerSelected.isTasted())

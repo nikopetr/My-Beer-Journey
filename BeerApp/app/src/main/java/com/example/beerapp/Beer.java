@@ -16,14 +16,14 @@ class Beer implements Serializable {
     private String type; // String which represents the type of the beer
     private boolean tasted; // boolean that represents if the user has tasted this beer or not
     private SerialBitmap beerImage; // bitmap for the image in list
-    private SerialBitmap beerImageHD; // bitmap for the image in details
+//    private SerialBitmap beerImageHD; // bitmap for the image in details
 
     Beer()
     {
 
     }
 
-    Beer(int _id, String name, String manufacturer, String country, float abv, String type,boolean tasted, SerialBitmap beerImage, SerialBitmap beerImageHD) {
+    Beer(int _id, String name, String manufacturer, String country, float abv, String type,boolean tasted, SerialBitmap beerImage) {
         this._id = _id;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -32,7 +32,7 @@ class Beer implements Serializable {
         this.type = type;
         this.tasted =  tasted;
         this.beerImage = beerImage;
-        this.beerImageHD = beerImageHD;
+        //this.beerImageHD = beerImageHD;
     }
 
 
@@ -62,7 +62,7 @@ class Beer implements Serializable {
 
     void setBeerImage(byte[] beerImageBytes) {this.beerImage = new SerialBitmap(beerImageBytes);}
 
-    void setBeerImageHD(byte[] beerImageHDBytes) {this.beerImageHD = new SerialBitmap(beerImageHDBytes);}
+//    void setBeerImageHD(byte[] beerImageHDBytes) {this.beerImageHD = new SerialBitmap(beerImageHDBytes);}
 
     public boolean isTasted() {
         return tasted;
@@ -103,13 +103,13 @@ class Beer implements Serializable {
         return beerImage.getBitmap();
     }
 
-    Bitmap getBeerImageHD() {
-        if (beerImageHD == null)
-            return null;
-        return beerImageHD.getBitmap();
-    }
+//    Bitmap getBeerImageHD() {
+//        if (beerImageHD == null)
+//            return null;
+//        return beerImageHD.getBitmap();
+//    }
 
     SerialBitmap getBeerImageSerial() {return beerImage;}
 
-    SerialBitmap getBeerImageHDSerial() {return beerImageHD;}
+//    SerialBitmap getBeerImageHDSerial() {return beerImageHD;}
 }

@@ -1,8 +1,8 @@
 package com.example.beerapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,8 +26,20 @@ public class BeerCatalogFragment extends Fragment {
     private List<Beer> beerList; // List including the Beer objects
     private Beer beerSelected; // The beer that the user selects to see it's details
 
+    private NameMustChange activityCallBack;
+
     public BeerCatalogFragment(){
         // req empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            activityCallBack = (NameMustChange) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement aids");
+        }
     }
 
     @Override
@@ -40,9 +51,7 @@ public class BeerCatalogFragment extends Fragment {
         // Initializing selected beer as null
         this.beerSelected = null;
 
-        if (savedInstanceState != null) {
-            beerList = (ArrayList<Beer>) savedInstanceState.getSerializable("beerList");
-        }
+        this.beerList = activityCallBack.getBeerList();
 
         ListView beerListView = rootView.findViewById(R.id.beerListView);
         // Initializing Array adapter for the beer list
@@ -89,7 +98,7 @@ public class BeerCatalogFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable("beerList", (ArrayList<Beer>)beerList);
+       // outState.putSerializable("beerList", (ArrayList<Beer>)beerList);
     }
 
     // After returning from BeerDetailsActivity,

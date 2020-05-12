@@ -43,9 +43,6 @@ public class DBHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
         this.context = context;
 
-        //final String DB_DESTINATION = "/data/data/com.example.beerapp/databases/beersDB.db";
-
-
         // Path where the database will be
         String outFileName = context.getDatabasePath(DATABASE_NAME).getPath();
         // Check if the database exists before copying
@@ -73,37 +70,7 @@ public class DBHandler extends SQLiteOpenHelper {
     // Creates the structure of the DB
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        String CREATE_BEERS_TABLE = "CREATE TABLE " +
-//                TABLE_BEERS + "(" +
-//                COLUMN_ID + " INTEGER PRIMARY KEY," +
-//                COLUMN_NAME + " TEXT," +
-//                COLUMN_MANUFACTURER + " TEXT," +
-//                COLUMN_COUNTRY + " TEXT," +
-//                COLUMN_ABV + " FLOAT," +
-//                COLUMN_TYPE + " TEXT" + ")";
-//        db.execSQL(CREATE_BEERS_TABLE);
-//
-//
-//        String CREATE_USER_TABLE = "CREATE TABLE " +
-//                TABLE_USER + "(" +
-//                COLUMN_ID + " INTEGER PRIMARY KEY," +
-//                COLUMN_BEERS_TASTED + " INTEGER," +
-//                COLUMN_LITRES_CONSUMED + " DOUBLE," +
-//                COLUMN_TOTAL_TIME + " BIGINT," +
-//                COLUMN_BEST_SESSION + " DOUBLE" + ")";
-//        db.execSQL(CREATE_USER_TABLE);
-//
-//        ContentValues values = new ContentValues();
-//        values.put(COLUMN_BEERS_TASTED, 0);
-//        values.put(COLUMN_LITRES_CONSUMED, 0);
-//        values.put(COLUMN_TOTAL_TIME, 0);
-//        values.put(COLUMN_BEST_SESSION, 0);
-//        db.insert(TABLE_USER, null, values);
 
-//        CREATE TABLE [tasted_beers](
-//                "_id"        INTEGER  NOT NULL PRIMARY KEY,
-//                "beer_id"        INTEGER NOT NULL
-//)
     }
 
     // Upgrades the DB, deleting recreating the DB (since we don't need the method to do anything special)
@@ -138,8 +105,8 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
             beer.setTasted(cursor.getInt(6) == 1);
-            beer.setBeerImage(setBeerImage(cursor.getInt(0)));
-            beer.setBeerImageHD(setBeerImageHD(cursor.getInt(0)));
+            beer.setBeerImage(getBeerImage(cursor.getInt(0),false));
+//            beer.setBeerImageHD(getBeerImageHD(cursor.getInt(0)));
             // Add the beer to the beers list
             beers.add(beer);
         }
@@ -164,8 +131,8 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setAbv(cursor.getFloat(4));
             beer.setType(cursor.getString(5));
             beer.setTasted(cursor.getInt(6) == 1);
-            beer.setBeerImage(setBeerImage(cursor.getInt(0)));
-            beer.setBeerImageHD(setBeerImageHD(cursor.getInt(0)));
+            beer.setBeerImage(getBeerImage(cursor.getInt(0),false));
+//            beer.setBeerImageHD(getBeerImageHD(cursor.getInt(0)));
             // Add the beer to the beers list
             beers.add(beer);
         }
@@ -184,26 +151,17 @@ public class DBHandler extends SQLiteOpenHelper {
         return (db.update(TABLE_BEERS, cv, COLUMN_ID + "=" + beer.get_id(), null) >= 1);
     }
 
-
-    // Set the beer image to the beer
-    private byte[] setBeerImage(int beerId) {
+    // Returns the image of the beerId to the beer in byte in array
+    // if the boolean parameter inHd, is true, then the image is returned in hd
+    byte[] getBeerImage(int beerId, boolean inHd) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT " + COLUMN_IMAGE + " FROM " + TABLE_BEERS + " WHERE " + COLUMN_ID + " = " + beerId;
-        Cursor cursor = db.rawQuery(query, null);
 
-        if (cursor.moveToFirst()) {
-            byte[] imgByte = cursor.getBlob(0);
-            cursor.close();
-            if (imgByte != null)
-                return imgByte;
-        }
-        cursor.close();
-        return null;
-    }
+        // if the parameter inHd is true, select the hd version of the image
+        String resolution = COLUMN_IMAGE;
+        if (inHd)
+            resolution = COLUMN_IMAGE_HD;
 
-    private byte[] setBeerImageHD(int beerId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT " + COLUMN_IMAGE_HD + " FROM " + TABLE_BEERS + " WHERE " + COLUMN_ID + " = " + beerId;
+        String query = "SELECT " + resolution + " FROM " + TABLE_BEERS + " WHERE " + COLUMN_ID + " = " + beerId;
         Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {

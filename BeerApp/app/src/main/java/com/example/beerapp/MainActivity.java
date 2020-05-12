@@ -7,23 +7,19 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NameMustChange {
 
     // Constant Strings used for the different action bar titles
     private static final String BEER_CATALOG_TITLE = "Beer Catalog";
@@ -31,15 +27,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String SETTINGS_TITLE = "Settings";
     private static final String MY_BEER_LIST = "Tasted Beers";
 
-    // DB Handler for all Database Stuff
+    // DB Handler for the database interaction
     private DBHandler dbHandler;
     // List including the Beer objects
     private List<Beer> beerList;
     // The navigation view of the activity
     private BottomNavigationView navigationView;
-    // A primary toolbar within the activity used to display the information of each fragment
+    // Primary toolbar within the activity used to display the information of each fragment
     private ActionBar actionBar;
     private String currentFragmentTag;
+
+    public List<Beer> getBeerList(){
+        return beerList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,16 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize DB Handler
         dbHandler = new DBHandler(this, null);
+
+        // Initialize beers from the DB
+        beerList = dbHandler.getAllBeers();
+        // Sorting the beers by ascending order by name
+        Collections.sort(this.beerList, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
 
 //        // If the username is null, redirecting user to the welcome screen which is used on the first time the app launches to set his "name"
 //        if(dbHandler.getUserName() == null)
@@ -72,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationView);
         navigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null)
+        {
             // Retrieve data from the Bundle and restore the dynamic state of the UI
-            currentFragmentTag = (String)savedInstanceState.getCharSequence("actonBarTitleSaved");
+            currentFragmentTag = (String)savedInstanceState.getCharSequence("actionBarTitleSaved");
             actionBar.setTitle(currentFragmentTag);
             //beerList = (ArrayList<Beer>)savedInstanceState.getSerializable("beerList");
         }
@@ -82,16 +93,8 @@ public class MainActivity extends AppCompatActivity {
             currentFragmentTag = BEER_CATALOG_TITLE;
             // Initialize the UI
             actionBar.setTitle(BEER_CATALOG_TITLE); // Changes the title of the toolbar
-            beerList = dbHandler.getAllBeers();
-            // Sort the beers by ascending order by name
-            Collections.sort(this.beerList, new Comparator<Beer>() {
-                @Override
-                public int compare(Beer beer1, Beer beer2) {
-                    return beer1.getName().compareTo(beer2.getName());
-                }
-            });
             BeerCatalogFragment beerCatalogFragment = new BeerCatalogFragment();
-            beerCatalogFragment.setBeerList(beerList);
+            //beerCatalogFragment.setBeerList(beerList);
             getSupportFragmentManager().beginTransaction().add(R.id.container, beerCatalogFragment, BEER_CATALOG_TITLE).commit();
         }
 
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         // Saves which fragment was loaded  for title of the action bar after it loads  back
-        outState.putCharSequence("actonBarTitleSaved",actionBar.getTitle());
+        outState.putCharSequence("actionBarTitleSaved",actionBar.getTitle());
         //outState.putSerializable("beerList", (ArrayList<Beer>)beerList);
     }
 
@@ -182,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     BeerCatalogFragment beerCatalogFragment = new BeerCatalogFragment();
-                    beerCatalogFragment.setBeerList(beerList);
+                    //beerCatalogFragment.setBeerList(beerList);
                     // If the fragment does not exist, add it to fragment manager.
                     replaceNewFragment(beerCatalogFragment, BEER_CATALOG_TITLE);
                 }

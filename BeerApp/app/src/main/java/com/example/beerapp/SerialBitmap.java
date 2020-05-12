@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class SerialBitmap implements Serializable {
+class SerialBitmap implements Serializable {
 
     private Bitmap bitmap;
 
@@ -35,6 +35,7 @@ public class SerialBitmap implements Serializable {
             byteStream.write(b);
         byte[] bitmapBytes = byteStream.toByteArray();
         bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+        byteStream.close();
     }
 
     Bitmap getBitmap() {
