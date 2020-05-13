@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
-    private Context context;
-
     // Constants used for the DB
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "beersDB.db";
@@ -41,7 +39,6 @@ public class DBHandler extends SQLiteOpenHelper {
     // Constructor
     DBHandler(Context context, SQLiteDatabase.CursorFactory factory){
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-        this.context = context;
 
         // Path where the database will be
         String outFileName = context.getDatabasePath(DATABASE_NAME).getPath();
@@ -81,17 +78,11 @@ public class DBHandler extends SQLiteOpenHelper {
 //        onCreate(db);
     }
 
-//    // Method for adding a new Beer to the DB
-//    public void addBeer(Beer beer) {
-//        ContentValues values = new ContentValues();
-//        values.put(COLUMN_NAME, beer.getName());
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        db.insert(TABLE_BEERS, null, values);
-//    }
-
     // Returns all the Beer objects from the DB
     List<Beer> getAllBeers() {
-        String query = "SELECT * FROM " + TABLE_BEERS ;
+        String query = "SELECT " + COLUMN_ID + ", " + COLUMN_NAME + ", " + COLUMN_MANUFACTURER + ", " + COLUMN_COUNTRY + ", " + COLUMN_ABV + ", " +
+            COLUMN_TYPE + ", " + COLUMN_TASTED + " FROM " + TABLE_BEERS ;
+
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         List<Beer> beers = new ArrayList<>();
@@ -117,7 +108,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // Returns the tasted Beer objects from the DB
     List<Beer> getTastedBeers() {
-        String query = "SELECT * FROM " + TABLE_BEERS + " WHERE " + COLUMN_TASTED + "=?";
+        String query = "SELECT " + COLUMN_ID + ", " + COLUMN_NAME + ", " + COLUMN_MANUFACTURER + ", " + COLUMN_COUNTRY + ", " + COLUMN_ABV + ", " +
+                COLUMN_TYPE + ", " + COLUMN_TASTED + " FROM " + TABLE_BEERS + " WHERE " + COLUMN_TASTED + "=?";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, new String[] {"1"});
         List<Beer> beers = new ArrayList<>();

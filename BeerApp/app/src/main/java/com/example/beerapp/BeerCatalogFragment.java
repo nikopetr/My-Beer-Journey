@@ -3,6 +3,7 @@ package com.example.beerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,19 +27,20 @@ public class BeerCatalogFragment extends Fragment {
     private List<Beer> beerList; // List including the Beer objects
     private Beer beerSelected; // The beer that the user selects to see it's details
 
-    private NameMustChange activityCallBack;
+    private NameMustChange activityCallBack; // Activity that this fragment is attached to
 
     public BeerCatalogFragment(){
-        // req empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
+        // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
     }
 
+    // Checks if the activity implements the interface otherwise throw exception
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
             activityCallBack = (NameMustChange) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement aids");
+            throw new ClassCastException(context.toString() + "must implement interface<<INTERFACE NAME>>"); //TODO CHANGE NAME
         }
     }
 
@@ -48,9 +50,12 @@ public class BeerCatalogFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
-        // Initializing selected beer as null
-        this.beerSelected = null;
+        if(savedInstanceState != null)
+            beerSelected = (Beer)savedInstanceState.getSerializable("beerSelected");
+        else
+            beerSelected = null;
 
+        // Initializing from main activity
         this.beerList = activityCallBack.getBeerList();
 
         ListView beerListView = rootView.findViewById(R.id.beerListView);
@@ -90,15 +95,10 @@ public class BeerCatalogFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    // Used to save the beer list
-    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-       // outState.putSerializable("beerList", (ArrayList<Beer>)beerList);
+
+        outState.putSerializable("beerSelected",beerSelected);
     }
 
     // After returning from BeerDetailsActivity,
@@ -115,17 +115,13 @@ public class BeerCatalogFragment extends Fragment {
         }
     }
 
-    void setBeerList(List<Beer> beerList) {
-        this.beerList = beerList;
-    }
-
     // Method for creating intent and passing the Beer object to the new activity
     private void moveToBeerDetailsScreen(int position)
     {
         beerSelected = beerList.get(position);
         // Create the Intent to start new Activity
         Intent intent = new Intent(getContext(), BeerDetailsActivity.class);
-        // Pass data to the  Activity through the Intent
+        // Pass data to the Activity through the Intent
         intent.putExtra("selectedBeer", beerSelected);
         // Ask Android to start the new Activity
         startActivityForResult(intent, 5);

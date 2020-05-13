@@ -34,7 +34,6 @@ public class DrinkSessionsFragment extends Fragment {
     private Chronometer sessionChronometer; // Chronometer used to count the time in a session
     private boolean isDrinking; // Represents if the user is currently in a drink session
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
-    private TextView differentBeersTextView; // For showing the different beers tasted (GOING TO ADD IT LATER) // TODO
     private Toast toast;
     private ChronometerHelper chronometerHelper;
 

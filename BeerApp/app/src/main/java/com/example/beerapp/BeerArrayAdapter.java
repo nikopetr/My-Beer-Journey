@@ -35,6 +35,14 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
             this.beerList.add(new Beer(beer.get_id(), beer.getName(), beer.getManufacturer(),
                     beer.getCountry(), beer.getAbv(), beer.getType(), beer.isTasted(), beer.getBeerImageSerial()));
 
+        setUpFilter();
+    }
+
+    List<Beer> getBeerList() {
+        return beerList;
+    }
+
+    void setUpFilter(){
         // Using a custom filter in order to be able to search for a beer and get the results based on the beerName
         beerNameFilter = new Filter() {
             @Override

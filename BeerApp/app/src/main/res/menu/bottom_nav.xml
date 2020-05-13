@@ -8,7 +8,7 @@
     <item
         android:id="@+id/myBeerListItem"
         android:icon="@drawable/ic_view_list_black_24dp"
-        android:title="@string/my_beer_list_item_string"/>
+        android:title="@string/tasted_beers_item_string"/>
 
     <item
         android:id="@+id/drinkSessionsItem"

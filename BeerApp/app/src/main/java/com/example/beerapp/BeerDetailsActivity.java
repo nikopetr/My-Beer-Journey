@@ -94,6 +94,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     // Method used to load the currently used fragment when the activity loads after an instance save
     @Override
     protected void onSaveInstanceState(Bundle outState) {

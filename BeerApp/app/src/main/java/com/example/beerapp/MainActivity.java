@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,21 +27,19 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
     private static final String BEER_CATALOG_TITLE = "Beer Catalog";
     private static final String DRINK_SESSIONS_TITLE = "My Drink Sessions";
     private static final String SETTINGS_TITLE = "Settings";
-    private static final String MY_BEER_LIST = "Tasted Beers";
+    private static final String TASTED_BEERS_TITLE = "Tasted Beers";
 
     // DB Handler for the database interaction
     private DBHandler dbHandler;
-    // List including the Beer objects
+    // List including the all Beer objects
     private List<Beer> beerList;
+    // List including the all tasted Beer objects
+    private List<Beer> tastedBeerList;
     // The navigation view of the activity
     private BottomNavigationView navigationView;
     // Primary toolbar within the activity used to display the information of each fragment
     private ActionBar actionBar;
     private String currentFragmentTag;
-
-    public List<Beer> getBeerList(){
-        return beerList;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +49,20 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
         // Initialize DB Handler
         dbHandler = new DBHandler(this, null);
 
-        // Initialize beers from the DB
+        // Initialize beers list from the DB
         beerList = dbHandler.getAllBeers();
         // Sorting the beers by ascending order by name
         Collections.sort(this.beerList, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
+
+        // Initialize tasted beers list from the DB
+        tastedBeerList = dbHandler.getTastedBeers();
+        // Sorting the beers by ascending order by name
+        Collections.sort(this.tastedBeerList, new Comparator<Beer>() {
             @Override
             public int compare(Beer beer1, Beer beer2) {
                 return beer1.getName().compareTo(beer2.getName());
@@ -114,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
                             navigationView.getMenu().getItem(0).setChecked(true);
                             break;
                         // If "My Beer List" fragment is active set the menu item to index 1
-                        case MY_BEER_LIST:
+                        case TASTED_BEERS_TITLE:
                             navigationView.getMenu().getItem(1).setChecked(true);
                             break;
                         // If "My Drink Sessions" fragment is active set the menu item to index 2
@@ -147,6 +157,16 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
         return true;
     }
 
+    // Returns a List including all beers
+    public List<Beer> getBeerList(){
+        return beerList;
+    }
+
+    // Returns a List including tasted beers
+    public List<Beer> getTastedBeerList(){
+        return tastedBeerList;
+    }
+
     // Method called to show an existing fragment, found by it's tag and transact to it
     private void replaceFragment(String fragmentTag) {
 
@@ -169,6 +189,34 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
         transaction.commit();
         actionBar.setTitle(fragmentTag);
         currentFragmentTag = fragmentTag;
+    }
+
+    // After returning from BeerDetailsActivity,
+    // updates the array adapter if changes occurred
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Initialize beers list from the DB to apply the changes
+        beerList = dbHandler.getAllBeers();
+        // Sorting the beers by ascending order by name
+        Collections.sort(this.beerList, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
+
+        // Initialize beers list from the DB to apply the changes
+        tastedBeerList = dbHandler.getTastedBeers();
+        // Sorting the beers by ascending order by name
+        Collections.sort(this.tastedBeerList, new Comparator<Beer>() {
+            @Override
+            public int compare(Beer beer1, Beer beer2) {
+                return beer1.getName().compareTo(beer2.getName());
+            }
+        });
+
     }
 
     // Method used for transitioning from one fragment to another without recreating the previous fragment
@@ -214,13 +262,13 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
                 }
                 return true;
             case R.id.myBeerListItem:
-                if (fragmentManager.findFragmentByTag(MY_BEER_LIST) != null) {
+                if (fragmentManager.findFragmentByTag(TASTED_BEERS_TITLE) != null) {
                     // If the fragment already exists, show it.
-                    replaceFragment((MY_BEER_LIST));
+                    replaceFragment((TASTED_BEERS_TITLE));
                 }
                 else {
                     // If the fragment does not exist, add it to fragment manager.
-                    replaceNewFragment(new MyBeerListFragment(), MY_BEER_LIST);
+                    replaceNewFragment(new TastedBeersFragment(), TASTED_BEERS_TITLE);
                 }
                 return true;
         }
