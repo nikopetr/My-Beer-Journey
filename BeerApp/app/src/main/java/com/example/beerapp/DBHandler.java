@@ -73,9 +73,9 @@ public class DBHandler extends SQLiteOpenHelper {
     // Upgrades the DB, deleting recreating the DB (since we don't need the method to do anything special)
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BEERS);
-//        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
-//        onCreate(db);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BEERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        onCreate(db);
     }
 
     // Returns all the Beer objects from the DB
@@ -278,9 +278,9 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
-            //String userName = cursor.getString(4);
+            String userName = cursor.getString(4);
             cursor.close();
-            return "userName";
+            return userName;
         }
         cursor.close();
         return null;

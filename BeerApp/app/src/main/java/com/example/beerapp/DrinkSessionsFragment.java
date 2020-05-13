@@ -28,7 +28,7 @@ public class DrinkSessionsFragment extends Fragment {
     private static final double HALF_PINT_TO_LITRE = 0.3;
 
     // Initialize variables
-    private NameMustChange activityCallBack; // Activity that this fragment is attached to
+    private FragmentListener activityCallBack; // Activity that this fragment is attached to
    // private DBHandler dbHandler;  // Database Helper
     private View rootView; // The root view of the fragment, used to get the rest view components
     private boolean isDrinking; // Represents if the user is currently in a drink session
@@ -46,9 +46,9 @@ public class DrinkSessionsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            activityCallBack = (NameMustChange) context;
+            activityCallBack = (FragmentListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement interface<<INTERFACE NAME>>"); //TODO CHANGE NAME
+            throw new ClassCastException(context.toString() + "must implement interface FragmentListener");
         }
     }
 
@@ -108,6 +108,8 @@ public class DrinkSessionsFragment extends Fragment {
         });
 
         // Initialize the text views for the stats from the db data
+        // Initialize the text view of the user name
+        ((TextView)rootView.findViewById(R.id.userStatsTextView)).setText(String.format("Stats of %s:", dbHandler.getUserName()));
         // Initialize different beers consumed text from the db data
         ((TextView)rootView.findViewById(R.id.totalBeersTastedTextView)).setText(String.valueOf(dbHandler.getTotalTastedBeers()));
         // Initialize total beer consumed text
@@ -285,7 +287,6 @@ public class DrinkSessionsFragment extends Fragment {
     }
 
     // Method for resetting the text values of the session's section
-    // Might need to call this function when resetting the stats or the journey from settings section
     private void updateStats() {
         DBHandler dbHandler = activityCallBack.getDbHandler();
         // Update the stats

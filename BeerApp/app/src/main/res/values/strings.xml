@@ -18,7 +18,7 @@
 
 
     <!-- Strings for fragment_drink_sessions -->
-    <string name="my_stats">My Stats</string>
+    <string name="user_stats">User Stats</string>
     <string name="different_beers_tasted">Different beers tasted:</string>
     <string name="total_beer_consumed">Total beer consumed:</string>
     <string name="total_time_spent_drinking">Total time spent drinking:</string>
@@ -62,9 +62,10 @@
     <string name="empty_list">No beers in my list to show</string>
 
     <!-- Strings for activity welcome screen -->
-    <string name="welcome_message">Welcome to My Beer Journey!</string>
+    <string name="welcome_message">Welcome to My Beer Journey</string>
     <string name="enter_name">Please enter your name to start your own journey:</string>
     <string name="name_edit">Name</string>
     <string name="start_journey_button">Start Journey</string>
     <string name="beer_logo_caption">Beer Logo</string>
+    <string name="cheers">cheers</string>
 </resources>

@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity implements NameMustChange {
+public class MainActivity extends AppCompatActivity implements FragmentListener {
 
     // Constant Strings used for the different action bar titles
     private static final String BEER_CATALOG_TITLE = "Beer Catalog";

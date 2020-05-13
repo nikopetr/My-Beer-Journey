@@ -2,6 +2,7 @@ package com.example.beerapp;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -11,15 +12,26 @@ import androidx.fragment.app.DialogFragment;
 
 public class ConfirmationDialog extends DialogFragment {
 
+    private FragmentListener activityCallBack; // Activity that this fragment is attached to
     private boolean resetWholeJourney;
-    private DBHandler dbHandler;
     private Toast toast;
 
     // Constructor
-    ConfirmationDialog(boolean resetWholeJourney, DBHandler dbHandler) {
+    ConfirmationDialog(boolean resetWholeJourney) {
         this.resetWholeJourney = resetWholeJourney;
-        this.dbHandler = dbHandler;
     }
+
+    // Checks if the activity implements the interface otherwise throw exception
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            activityCallBack = (FragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement interface FragmentListener");
+        }
+    }
+
 
     @NonNull
     @Override
@@ -29,18 +41,25 @@ public class ConfirmationDialog extends DialogFragment {
         // Initialize the builder for the alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // If the user pressed the reset journey button
-        if (resetWholeJourney) {
+        if (resetWholeJourney)
+        {
             builder.setTitle(R.string.dialog_title_journey_reset);
             builder.setMessage(R.string.dialog_message_journey_reset);
             // Button Start Over
             builder.setPositiveButton(R.string.dialog_positive_button_journey, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dbHandler.resetUserData();
+                    // Resetting user stats and tasted beers on the db
+                    activityCallBack.getDbHandler().resetUserData();
+
+                    // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
                     if (toast != null)
                         toast.cancel();
+
+                    // Add toast message for Start over
                     toast = Toast.makeText(getContext(), "Starting Over", Toast.LENGTH_SHORT); //add toast message for Start over
-                    toast.show(); //show toast message
+                    // Show toast message about starting over
+                    toast.show();
                 }
             });
             // Button Cancel
@@ -58,11 +77,17 @@ public class ConfirmationDialog extends DialogFragment {
             builder.setPositiveButton(R.string.dialog_positive_button_stats, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    // Resetting user stats on the db
+                    activityCallBack.getDbHandler().resetUserStats();
+
+                    // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
                     if (toast != null)
                         toast.cancel();
-                    toast = Toast.makeText(getContext(), "Resetting Stats", Toast.LENGTH_SHORT); //add toast message for Start over
-                    toast.show(); //show toast message
-                    dbHandler.resetUserStats();
+
+                    // Add toast message for reset stats
+                    toast = Toast.makeText(getContext(), "Resetting Stats", Toast.LENGTH_SHORT);
+                    // Show toast message about resetting user stats
+                    toast.show();
                 }
             });
             // Button Cancel
@@ -77,7 +102,7 @@ public class ConfirmationDialog extends DialogFragment {
         return builder.create();
     }
 
-    // Do not dismiss the dialog on screen orientation change
+    //  Method called when the view is destroyed, in order to avoid dismissing the dialog on screen orientation change
     @Override
     public void onDestroyView() {
         if (getDialog() != null && getRetainInstance()) {

@@ -21,7 +21,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class BeerCatalogFragment extends Fragment {
 
-    private NameMustChange activityCallBack; // Activity that this fragment is attached to
+    private FragmentListener activityCallBack; // Activity that this fragment is attached to
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> beerList; // List including the Beer objects
     private Beer beerSelected; // The beer that the user selects to see it's details
@@ -37,9 +37,9 @@ public class BeerCatalogFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try{
-            activityCallBack = (NameMustChange) context;
+            activityCallBack = (FragmentListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement interface<<INTERFACE NAME>>"); //TODO CHANGE NAME
+            throw new ClassCastException(context.toString() + "must implement interface FragmentListener");
         }
     }
 
