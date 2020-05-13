@@ -3,7 +3,6 @@ package com.example.beerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.GridView;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
@@ -23,10 +21,10 @@ import static android.app.Activity.RESULT_OK;
 
 public class TastedBeersFragment extends Fragment {
 
+    private NameMustChange activityCallBack; // Activity that this fragment is attached to
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private List<Beer> tastedBeerList; // List including the Beer objects
     private Beer beerSelected; // The beer that the user selects to see it's details
-    private NameMustChange activityCallBack; // Activity that this fragment is attached to
 
     public TastedBeersFragment( ) {
         // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment

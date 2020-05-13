@@ -6,7 +6,7 @@
         android:title="@string/beer_Catalog_item_string"/>
 
     <item
-        android:id="@+id/myBeerListItem"
+        android:id="@+id/tastedBeersItem"
         android:icon="@drawable/ic_view_list_black_24dp"
         android:title="@string/tasted_beers_item_string"/>
 

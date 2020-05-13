@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -167,6 +166,11 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
         return tastedBeerList;
     }
 
+//    // Returns the DB handler
+    public DBHandler getDbHandler(){
+        return dbHandler;
+    }
+
     // Method called to show an existing fragment, found by it's tag and transact to it
     private void replaceFragment(String fragmentTag) {
 
@@ -233,16 +237,12 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
                 }
                 else {
                     BeerCatalogFragment beerCatalogFragment = new BeerCatalogFragment();
-                    //beerCatalogFragment.setBeerList(beerList);
                     // If the fragment does not exist, add it to fragment manager.
                     replaceNewFragment(beerCatalogFragment, BEER_CATALOG_TITLE);
                 }
                 return true;
             case R.id.drinkSessionsItem:
                 if (fragmentManager.findFragmentByTag(DRINK_SESSIONS_TITLE) != null) {
-                    // Before you show the DrinkSessionsFragment update it's text values in case there was a reset from the user
-                    DrinkSessionsFragment fragment = (DrinkSessionsFragment) getSupportFragmentManager().findFragmentByTag(DRINK_SESSIONS_TITLE);
-                    if (fragment != null) fragment.updateStats();
                     // If a DrinkSessionsFragment already exists, show it.
                     replaceFragment(DRINK_SESSIONS_TITLE);
                 }
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
                     replaceNewFragment(new SettingsFragment(), SETTINGS_TITLE);
                 }
                 return true;
-            case R.id.myBeerListItem:
+            case R.id.tastedBeersItem:
                 if (fragmentManager.findFragmentByTag(TASTED_BEERS_TITLE) != null) {
                     // If the fragment already exists, show it.
                     replaceFragment((TASTED_BEERS_TITLE));
@@ -274,11 +274,4 @@ public class MainActivity extends AppCompatActivity implements NameMustChange {
         }
         return false;
     }
-
-    DBHandler getDbHandler()
-    {
-        return dbHandler;
-    }
-
-
 }

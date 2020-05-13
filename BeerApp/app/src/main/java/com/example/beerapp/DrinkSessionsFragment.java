@@ -1,6 +1,6 @@
 package com.example.beerapp;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -17,7 +17,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
@@ -29,17 +28,30 @@ public class DrinkSessionsFragment extends Fragment {
     private static final double HALF_PINT_TO_LITRE = 0.3;
 
     // Initialize variables
-    private DBHandler dbHandler;  // Database Helper
+    private NameMustChange activityCallBack; // Activity that this fragment is attached to
+   // private DBHandler dbHandler;  // Database Helper
     private View rootView; // The root view of the fragment, used to get the rest view components
-    private Chronometer sessionChronometer; // Chronometer used to count the time in a session
     private boolean isDrinking; // Represents if the user is currently in a drink session
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
-    private Toast toast;
-    private ChronometerHelper chronometerHelper;
+    private Toast stopSessionToast; // Toast used for showing message when the session is stopped
+    private Chronometer sessionChronometer; // Chronometer used to count the time in a session
+    private ChronometerHelper chronometerHelper; //
 
      public DrinkSessionsFragment( ) {
          // Reburied empty constructor to call Fragment's constructor
     }
+
+    // Checks if the activity implements the interface otherwise throw exception
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            activityCallBack = (NameMustChange) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement interface<<INTERFACE NAME>>"); //TODO CHANGE NAME
+        }
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,36 +65,24 @@ public class DrinkSessionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_drink_sessions, container, false);
-        // Gets the dbHandler from the main activity
-        this.dbHandler = ((MainActivity) Objects.requireNonNull(getActivity())).getDbHandler();
-        // Initialize the session's chronometer
-        this.sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
 
-        // Find the START/STOP SESSION button and set the onClick methods to be called
+        // Initialize the session's chronometer
+        sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
+
+        // Get the dbHandler from the main activity which is used for the database interaction
+        DBHandler dbHandler = activityCallBack.getDbHandler();
+
+        // Find the START/STOP SESSION button and set the onClick methods
         Button sessionButton = rootView.findViewById(R.id.startSessionButton);
         sessionButton.setBackgroundResource(R.drawable.custom_start_button);
         sessionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // If the user is drinking then we stop the session, otherwise a session starts
-                Button button = rootView.findViewById(R.id.addPintButton);
-                int heightOffset = button.getHeight();
                 if (isDrinking){
-                    if (getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
-                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
-                            toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, heightOffset * 2); //add toast message for stop of a session
-                            toast.show(); //show toast message
-                        }
-                    }
-                    else
-                    {
-                        if (toast == null || toast.getView().getWindowVisibility() != View.VISIBLE) {
-                            toast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT); //add toast message for start of a
-                            toast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, heightOffset);
-                            toast.show(); //show toast message
-                        }
-                    }
+                    // Call the method for showing toasts that the session has stopped
+                    addStopMessageToast();
+                    // Stop the on going session
                     stopDrinkSession();
                 }
                 else
@@ -117,17 +117,20 @@ public class DrinkSessionsFragment extends Fragment {
         // Initialize the best session text
         ((TextView)rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
 
+
+        // If the user is currently drinking, continuing the drink session from where it was left
         if (isDrinking)
         {
-            // If the user is currently drinking,
             // set the chronometer's base to the previous base.
             startDrinkSession(chronometerHelper.getStartTime());
             ((TextView)rootView.findViewById(R.id.litresDrankTextView)).setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
 
         }
+
         return rootView;
     }
 
+    // Used to continue the on going session
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -205,6 +208,7 @@ public class DrinkSessionsFragment extends Fragment {
     // save(update) the current's drink session outcomes and disable the view components
     private void stopDrinkSession() {
         String logMessageTag = "Database Interaction";
+        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Save the values to variables to be stored in the DB
         if (!dbHandler.addLitres(totalLitresDrank))
             Log.i(logMessageTag, "Could not save session's litres to the DB");
@@ -224,12 +228,10 @@ public class DrinkSessionsFragment extends Fragment {
         totalLitresDrank = 0;
         // Stop the chronometer
         sessionChronometer.stop();
-
+        // Disable the session components
         disableSessionComponents();
-
-        // Update the stats
+        // Update the stats with the new values
         updateStats();
-
         this.isDrinking = false;
     }
 
@@ -249,6 +251,7 @@ public class DrinkSessionsFragment extends Fragment {
     private String getConvertedTime() {
         // Initialize the string
         String timeString = "";
+        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Get the total time in seconds
         long totalTimePassed = dbHandler.getTotalTime();
         // Convert total time to days, hours, minutes and seconds
@@ -281,18 +284,49 @@ public class DrinkSessionsFragment extends Fragment {
         return timeString;
     }
 
-    // Function for resetting the text values of the session's section
-    // This function is called when the STOP SESSION button is pressed to update the stats with the new values
+    // Method for resetting the text values of the session's section
     // Might need to call this function when resetting the stats or the journey from settings section
-    void updateStats() {
-        if (dbHandler != null) {
-            // Update the stats
-            // Update total litres text
-            ((TextView) rootView.findViewById(R.id.beerConsumedNumberTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getTotalLitres()));
-            // Update the time text
-            ((TextView) rootView.findViewById(R.id.totalTimeSpentNumberTextView)).setText(getConvertedTime());
-            // Update best session text
-            ((TextView) rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
+    private void updateStats() {
+        DBHandler dbHandler = activityCallBack.getDbHandler();
+        // Update the stats
+        // Update total litres text
+        ((TextView) rootView.findViewById(R.id.beerConsumedNumberTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getTotalLitres()));
+        // Update the time text
+        ((TextView) rootView.findViewById(R.id.totalTimeSpentNumberTextView)).setText(getConvertedTime());
+        // Update best session text
+        ((TextView) rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
+    }
+
+
+    // Method which adds a stopSessionToast with a message that shows the session has stopped
+    private void addStopMessageToast(){
+        Button button = rootView.findViewById(R.id.addPintButton);
+        int heightOffset = button.getHeight();
+
+        // When the orientation is portrait, the gravity of the stopSessionToast is at the bottom with
+        // with bigger offset to the add pint button
+        if (getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT)
+        {
+            // Checking to make sure that the stopSessionToast is null, in order to avoid showing multiple toasts at the same time
+            if (stopSessionToast == null || stopSessionToast.getView().getWindowVisibility() != View.VISIBLE)
+            {
+                stopSessionToast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT);
+                stopSessionToast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, heightOffset * 2);
+                stopSessionToast.show(); // Show stopSessionToast message
+            }
+        }
+        else
+        {
+            // When the orientation is landscape, the gravity of the stopSessionToast is at the bottom with
+            // with smaller offset to the add pint button
+
+            // Checking to make sure that the stopSessionToast is null, in order to avoid showing multiple toasts at the same time
+            if (stopSessionToast == null || stopSessionToast.getView().getWindowVisibility() != View.VISIBLE) {
+                stopSessionToast = Toast.makeText(getContext(), "Session Stopped", Toast.LENGTH_SHORT);
+                stopSessionToast.setGravity(Gravity.CENTER | Gravity.BOTTOM, 0, heightOffset);
+                // Show stopSessionToast message
+                stopSessionToast.show();
+            }
         }
     }
 }

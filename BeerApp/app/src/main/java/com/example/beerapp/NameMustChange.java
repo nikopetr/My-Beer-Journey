@@ -9,4 +9,7 @@ interface NameMustChange { //TODO CHANGE THIS MFING NAME
 
     // Returns a List including tasted beers
     List<Beer> getTastedBeerList();
+
+    // Returns the DB handler
+    DBHandler getDbHandler();
 }
