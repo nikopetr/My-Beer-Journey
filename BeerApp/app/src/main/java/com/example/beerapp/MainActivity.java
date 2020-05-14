@@ -71,15 +71,12 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
             // Retrieve data from the Bundle and restore the dynamic state of the UI
             currentFragmentTag = (String)savedInstanceState.getCharSequence("actionBarTitleSaved");
             actionBar.setTitle(currentFragmentTag);
-            //beerList = (ArrayList<Beer>)savedInstanceState.getSerializable("beerList");
         }
         else {
             currentFragmentTag = BEER_CATALOG_TITLE;
-            // Initialize the UI
+            // Initialize the UI with the BeerCatalogFragment fragment
             actionBar.setTitle(BEER_CATALOG_TITLE); // Changes the title of the toolbar
-            BeerCatalogFragment beerCatalogFragment = new BeerCatalogFragment();
-            //beerCatalogFragment.setBeerList(beerList);
-            getSupportFragmentManager().beginTransaction().add(R.id.container, beerCatalogFragment, BEER_CATALOG_TITLE).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, new BeerCatalogFragment(), BEER_CATALOG_TITLE).commit();
         }
 
         // Change the title and selected navigation item when the fragment is changed when the back button is pressed
@@ -121,9 +118,8 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Saves which fragment was loaded  for title of the action bar after it loads  back
+        // Saves which fragment was loaded for title of the action bar after it loads  back
         outState.putCharSequence("actionBarTitleSaved",actionBar.getTitle());
-        //outState.putSerializable("beerList", (ArrayList<Beer>)beerList);
     }
 
     @Override
@@ -194,15 +190,6 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
         currentFragmentTag = fragmentTag;
     }
 
-//    // After returning from BeerDetailsActivity,
-//    // updates the array adapter if changes occurred
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//
-//    }
-
     // Method used for transitioning from one fragment to another without recreating the previous fragment
     // by using tags to check if a fragment already exists in the fragment manager
     private boolean fragmentTransition (int selectedItemId) {
@@ -253,5 +240,17 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
                 return true;
         }
         return false;
+    }
+
+    // Overwritten method in order to navigate to the beer catalog fragment
+    // which is the default "home"
+    @Override
+    public void onBackPressed() {
+
+        // if the current fragment is the beer catalog fragment finish the activity (exits application)
+        if (currentFragmentTag.equals(BEER_CATALOG_TITLE))
+            finish();
+        else
+            replaceFragment(BEER_CATALOG_TITLE);
     }
 }
