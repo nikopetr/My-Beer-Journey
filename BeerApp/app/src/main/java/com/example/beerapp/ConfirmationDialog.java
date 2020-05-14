@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,19 +51,23 @@ public class ConfirmationDialog extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     // Resetting user stats and tasted beers on the db
-                    activityCallBack.getDbHandler().resetUserData();
 
-                    // Updates tasted beers list from the database after the changes
-                    activityCallBack.updateBeerLists();
+                    if(activityCallBack.getDbHandler().resetUserData())
+                    {
+                        // Updates tasted beers list from the database after the changes
+                        activityCallBack.updateBeerLists();
 
-                    // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
-                    if (toast != null)
-                        toast.cancel();
+                        // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
+                        if (toast != null)
+                            toast.cancel();
 
-                    // Add toast message for Start over
-                    toast = Toast.makeText(getContext(), "Starting Over", Toast.LENGTH_SHORT); //add toast message for Start over
-                    // Show toast message about starting over
-                    toast.show();
+                        // Add toast message for Start over
+                        toast = Toast.makeText(getContext(), "Starting Over", Toast.LENGTH_SHORT); //add toast message for Start over
+                        // Show toast message about starting over
+                        toast.show();
+                    }
+                    else
+                        Log.i("Database Interaction", "Could not reset user data on databse");
                 }
             });
             // Button Cancel
@@ -80,17 +85,21 @@ public class ConfirmationDialog extends DialogFragment {
             builder.setPositiveButton(R.string.dialog_positive_button_stats, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     // Resetting user stats on the db
-                    activityCallBack.getDbHandler().resetUserStats();
+                    if (activityCallBack.getDbHandler().resetUserStats())
+                    {
+                        // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
+                        if (toast != null)
+                            toast.cancel();
 
-                    // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
-                    if (toast != null)
-                        toast.cancel();
-
-                    // Add toast message for reset stats
-                    toast = Toast.makeText(getContext(), "Resetting Stats", Toast.LENGTH_SHORT);
-                    // Show toast message about resetting user stats
-                    toast.show();
+                        // Add toast message for reset stats
+                        toast = Toast.makeText(getContext(), "Resetting Stats", Toast.LENGTH_SHORT);
+                        // Show toast message about resetting user stats
+                        toast.show();
+                    }
+                    else
+                        Log.i("Database Interaction", "Could not reset user data on database");
                 }
             });
             // Button Cancel

@@ -2,6 +2,7 @@ package com.example.beerapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -36,8 +37,12 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         String nameChosen =  ((EditText)findViewById(R.id.nameEditText)).getText().toString();
-        dbHandler.updateUserName(nameChosen);
-        startActivity(intent);
-        finish();
+
+        if (dbHandler.updateUserName(nameChosen)){
+            startActivity(intent);
+            finish();
+        }
+        else
+            Log.i("Database Interaction", "Could not save username to the database");
     }
 }

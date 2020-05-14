@@ -97,7 +97,6 @@ public class DBHandler extends SQLiteOpenHelper {
             beer.setType(cursor.getString(5));
             beer.setTasted(cursor.getInt(6) == 1);
             beer.setBeerImage(getBeerImage(cursor.getInt(0),false));
-//            beer.setBeerImageHD(getBeerImageHD(cursor.getInt(0)));
             // Add the beer to the beers list
             beers.add(beer);
         }
@@ -294,7 +293,6 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(COLUMN_NAME, name);
         return (db.update(TABLE_USER, cv, null, null) >=1);
     }
-
 
     // Reset the whole user's journey data from the db.
     // Including beers tasted, and user stats
