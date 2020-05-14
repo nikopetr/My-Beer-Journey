@@ -37,4 +37,18 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/cheersGlassesImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.17"
+        android:contentDescription="@string/cheers"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:srcCompat="@drawable/cheers_background" />
 </androidx.constraintlayout.widget.ConstraintLayout>
