@@ -3,7 +3,6 @@ package com.example.beerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ public class TastedBeersFragment extends Fragment {
     private FragmentListener activityCallBack; // Activity that this fragment is attached to
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private GridView beerListView; // The view used to present the tasted beers
-    private SearchView searchView;
 
     public TastedBeersFragment( ) {
         // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
@@ -56,7 +54,7 @@ public class TastedBeersFragment extends Fragment {
         initializeBeerListArrayAdapter();
 
         // Initializing search view
-        searchView = rootView.findViewById(R.id.searchView); // Initializes the search item
+        SearchView searchView = rootView.findViewById(R.id.searchView); // Initializes the search item
         searchView.setQueryHint("Search for a beer");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
