@@ -122,10 +122,11 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
         outState.putCharSequence("actionBarTitleSaved",actionBar.getTitle());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
+    // TODO Check if necessary, if not delete it
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        return true;
+//    }
 
     // Returns a List including all beers
     public List<Beer> getBeerList(){

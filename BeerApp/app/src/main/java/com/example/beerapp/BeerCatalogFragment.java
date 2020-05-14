@@ -40,7 +40,6 @@ public class BeerCatalogFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
@@ -63,9 +62,8 @@ public class BeerCatalogFragment extends Fragment {
                 beerListArrayAdapter.getFilter().filter(newText);
                 return false;
             }
-
-
         });
+        // TODO Add x, when clicked in body, to close the searchView
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,7 +83,6 @@ public class BeerCatalogFragment extends Fragment {
         {
             // Updates beer list and beers tasted list from the database after the changes
             activityCallBack.updateBeerLists();
-
             // Initializing Array adapter for the beer list
             initializeBeerListArrayAdapter(); //TODO check if there is a better way doing this instead of making the array adapter from the start
         }
@@ -115,5 +112,12 @@ public class BeerCatalogFragment extends Fragment {
         intent.putExtra("selectedBeer", beerListArrayAdapter.getItem(position));
         // Ask Android to start the new Activity
         startActivityForResult(intent, 5);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Set empty text to the filter so the result will be all beers
+        beerListArrayAdapter.getFilter().filter("");
     }
 }

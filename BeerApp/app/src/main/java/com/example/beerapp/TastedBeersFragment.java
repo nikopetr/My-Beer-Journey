@@ -3,6 +3,7 @@ package com.example.beerapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ public class TastedBeersFragment extends Fragment {
     private FragmentListener activityCallBack; // Activity that this fragment is attached to
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private GridView beerListView; // The view used to present the tasted beers
+    private SearchView searchView;
 
     public TastedBeersFragment( ) {
         // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
@@ -54,7 +56,7 @@ public class TastedBeersFragment extends Fragment {
         initializeBeerListArrayAdapter();
 
         // Initializing search view
-        SearchView searchView = rootView.findViewById(R.id.searchView); // Initializes the search item
+        searchView = rootView.findViewById(R.id.searchView); // Initializes the search item
         searchView.setQueryHint("Search for a beer");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -68,6 +70,7 @@ public class TastedBeersFragment extends Fragment {
                 return false;
             }
         });
+        // TODO Add x, when clicked in body, to close the searchView
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,6 +86,7 @@ public class TastedBeersFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // If this is the code assigned to BeerDetailsActivity and returning Intent succeeded
+
         if ((requestCode == 5) && (resultCode == RESULT_OK))
         {
             // Updates beer list and beers tasted list from the database after the changes
@@ -117,5 +121,14 @@ public class TastedBeersFragment extends Fragment {
         intent.putExtra("selectedBeer", beerListArrayAdapter.getItem(position));
         // Ask Android to start the new Activity
         startActivityForResult(intent, 5);
+    }
+
+    // It is used for resolving the problem about not refreshing the arrayAdapter when changing fragments
+    // and showed only previous results, even if the query was empty
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Set empty text to the filter so the result will be all beers
+        beerListArrayAdapter.getFilter().filter("");
     }
 }
