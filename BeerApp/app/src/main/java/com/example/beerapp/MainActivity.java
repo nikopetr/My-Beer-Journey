@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements FragmentListener 
                 return beer1.getName().compareTo(beer2.getName());
             }
         });
-
     }
 
     // Method called to show an existing fragment, found by it's tag and transact to it

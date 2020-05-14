@@ -35,7 +35,7 @@ public class DrinkSessionsFragment extends Fragment {
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
     private Toast stopSessionToast; // Toast used for showing message when the session is stopped
     private Chronometer sessionChronometer; // Chronometer used to count the time in a session
-    private ChronometerHelper chronometerHelper; //
+    private long drinkingStartingTime; // The time that the drink session has started, used to help with the chronometer timer
 
      public DrinkSessionsFragment( ) {
          // Reburied empty constructor to call Fragment's constructor
@@ -55,9 +55,9 @@ public class DrinkSessionsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.chronometerHelper = new ChronometerHelper();
         this.isDrinking = false;
         this.totalLitresDrank = 0;
+        this.drinkingStartingTime = 0;
     }
 
     @Override
@@ -68,7 +68,8 @@ public class DrinkSessionsFragment extends Fragment {
         // Initialize the session's chronometer
         sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
 
-        // Initializes the dbHandler from the main activity which is used for the database interaction
+        // Initializes the dbHandler from the main activity which is
+        // used for the database interaction in order to save user stats
         dbHandler = activityCallBack.getDbHandler();
 
         // Find the START/STOP SESSION button and set the onClick methods
@@ -122,7 +123,7 @@ public class DrinkSessionsFragment extends Fragment {
         if (isDrinking)
         {
             // set the chronometer's base to the previous base.
-            startDrinkSession(chronometerHelper.getStartTime());
+            startDrinkSession(drinkingStartingTime);
             ((TextView)rootView.findViewById(R.id.litresDrankTextView)).setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
         }
 
@@ -161,8 +162,8 @@ public class DrinkSessionsFragment extends Fragment {
         sessionChronometer.setBase(baseTime);
         // Start the chronometer
         sessionChronometer.start();
-        // Sets the start time for the chronometer helper
-        chronometerHelper.setStartTime(baseTime);
+        // Sets the start time for the chronometer time helper
+        drinkingStartingTime = baseTime;
         // Enable the chronometer
         sessionChronometer.setEnabled(true);
         // Change the button to show "STOP SESSION" with red background
@@ -207,7 +208,6 @@ public class DrinkSessionsFragment extends Fragment {
     // save(update) the current's drink session outcomes and disable the view components
     private void stopDrinkSession() {
         String logMessageTag = "Database Interaction";
-        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Save the values to variables to be stored in the DB
         if (!dbHandler.addLitres(totalLitresDrank))
             Log.i(logMessageTag, "Could not save session's litres to the DB");
@@ -223,7 +223,7 @@ public class DrinkSessionsFragment extends Fragment {
 
         // Reset the variables' values
         sessionChronometer.setBase(SystemClock.elapsedRealtime());
-        chronometerHelper.setStartTime(SystemClock.elapsedRealtime());
+        drinkingStartingTime = SystemClock.elapsedRealtime();
         totalLitresDrank = 0;
         // Stop the chronometer
         sessionChronometer.stop();
@@ -250,7 +250,6 @@ public class DrinkSessionsFragment extends Fragment {
     private String getConvertedTime() {
         // Initialize the string
         String timeString = "";
-//        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Get the total time in seconds
         long totalTimePassed = dbHandler.getTotalTime();
         // Convert total time to days, hours, minutes and seconds
@@ -285,7 +284,6 @@ public class DrinkSessionsFragment extends Fragment {
 
     // Method for resetting the text values of the session's section
     private void updateStats() {
-//        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Update the stats
         // Update total litres text
         ((TextView) rootView.findViewById(R.id.beerConsumedNumberTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getTotalLitres()));
