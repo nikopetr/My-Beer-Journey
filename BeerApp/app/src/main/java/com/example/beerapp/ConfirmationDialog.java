@@ -52,6 +52,9 @@ public class ConfirmationDialog extends DialogFragment {
                     // Resetting user stats and tasted beers on the db
                     activityCallBack.getDbHandler().resetUserData();
 
+                    // Updates tasted beers list from the database after the changes
+                    activityCallBack.updateBeerLists();
+
                     // Checking to make sure that the toast is null, in order to avoid showing multiple toasts at the same time
                     if (toast != null)
                         toast.cancel();

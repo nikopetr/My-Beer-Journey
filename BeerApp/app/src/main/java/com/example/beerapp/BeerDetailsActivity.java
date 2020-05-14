@@ -138,7 +138,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
             // Create Intent to return the changed beer to the Main Activity
             Intent returnData = new Intent();
-            returnData.putExtra("tasted", tasted);
+//            returnData.putExtra("tasted", tasted);
             setResult(RESULT_OK, returnData);
         }
         else

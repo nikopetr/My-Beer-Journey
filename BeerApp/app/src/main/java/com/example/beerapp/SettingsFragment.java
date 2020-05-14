@@ -17,11 +17,8 @@ public class SettingsFragment extends Fragment {
         // Reburied empty constructor to call Fragment's constructor
     }
 
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Initialize the root view
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 

@@ -29,7 +29,7 @@ public class DrinkSessionsFragment extends Fragment {
 
     // Initialize variables
     private FragmentListener activityCallBack; // Activity that this fragment is attached to
-   // private DBHandler dbHandler;  // Database Helper
+    private DBHandler dbHandler;  // Database Helper
     private View rootView; // The root view of the fragment, used to get the rest view components
     private boolean isDrinking; // Represents if the user is currently in a drink session
     private double totalLitresDrank; // The total amount of beer the user has consumed during a drink session
@@ -69,8 +69,8 @@ public class DrinkSessionsFragment extends Fragment {
         // Initialize the session's chronometer
         sessionChronometer = rootView.findViewById(R.id.sessionChronometer);
 
-        // Get the dbHandler from the main activity which is used for the database interaction
-        DBHandler dbHandler = activityCallBack.getDbHandler();
+        // Initializes the dbHandler from the main activity which is used for the database interaction
+        dbHandler = activityCallBack.getDbHandler();
 
         // Find the START/STOP SESSION button and set the onClick methods
         Button sessionButton = rootView.findViewById(R.id.startSessionButton);
@@ -253,7 +253,7 @@ public class DrinkSessionsFragment extends Fragment {
     private String getConvertedTime() {
         // Initialize the string
         String timeString = "";
-        DBHandler dbHandler = activityCallBack.getDbHandler();
+//        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Get the total time in seconds
         long totalTimePassed = dbHandler.getTotalTime();
         // Convert total time to days, hours, minutes and seconds
@@ -288,7 +288,7 @@ public class DrinkSessionsFragment extends Fragment {
 
     // Method for resetting the text values of the session's section
     private void updateStats() {
-        DBHandler dbHandler = activityCallBack.getDbHandler();
+//        DBHandler dbHandler = activityCallBack.getDbHandler();
         // Update the stats
         // Update total litres text
         ((TextView) rootView.findViewById(R.id.beerConsumedNumberTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getTotalLitres()));

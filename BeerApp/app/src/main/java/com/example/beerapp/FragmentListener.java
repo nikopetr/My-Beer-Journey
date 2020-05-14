@@ -12,4 +12,7 @@ interface FragmentListener {
 
     // Returns the DB handler
     DBHandler getDbHandler();
+
+    // Updates beers list and beers tasted list with the from the database
+    void updateBeerLists();
 }

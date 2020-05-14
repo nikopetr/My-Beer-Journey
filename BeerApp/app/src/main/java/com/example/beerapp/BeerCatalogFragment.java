@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
@@ -18,15 +17,11 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
-
 public class BeerCatalogFragment extends Fragment {
 
     private FragmentListener activityCallBack; // Activity that this fragment is attached to
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
-    private List<Beer> beerList; // List including the Beer objects
-    private Beer beerSelected; // The beer that the user selects to see it's details
-
-
+    private ListView beerListView; // The view used to present the beers
 
     public BeerCatalogFragment(){
         // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
@@ -49,24 +44,11 @@ public class BeerCatalogFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
-        if(savedInstanceState != null)
-            beerSelected = (Beer)savedInstanceState.getSerializable("beerSelected");
-        else
-            beerSelected = null;
+        // Initializing the view used to present the beers
+        beerListView = rootView.findViewById(R.id.beerListView);
 
-        // Initializing from main activity
-        this.beerList = activityCallBack.getBeerList();
-
-        ListView beerListView = rootView.findViewById(R.id.beerListView);
         // Initializing Array adapter for the beer list
-        beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, R.layout.row_beer_item); // Array adapter for the beer list
-        beerListView.setAdapter(beerListArrayAdapter);
-        beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                moveToBeerDetailsScreen(position);
-            }
-        });
+        initializeBeerListArrayAdapter();
 
         SearchView searchView = rootView.findViewById(R.id.searchView); // Initializes the search item
         searchView.setQueryHint("Search for a beer");
@@ -93,13 +75,6 @@ public class BeerCatalogFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putSerializable("beerSelected",beerSelected);
-    }
-
     // After returning from BeerDetailsActivity,
     // updates the array adapter if changes occurred
     @Override
@@ -108,22 +83,37 @@ public class BeerCatalogFragment extends Fragment {
         // If this is the code assigned to BeerDetailsActivity and returning Intent succeeded
         if ((requestCode == 5) && (resultCode == RESULT_OK))
         {
-            // Get saved beer's taste state from the returning Intent
-            boolean tasted = Objects.requireNonNull(data.getExtras()).getBoolean("tasted");
-            beerSelected.setTasted(tasted);
+            // Updates beer list and beers tasted list from the database after the changes
+            activityCallBack.updateBeerLists();
+
+            // Initializing Array adapter for the beer list
+            initializeBeerListArrayAdapter(); //TODO check if there is a better way doing this instead of making the array adapter from the start
         }
+    }
+
+    // Initializing Array adapter for the beer list
+    private void initializeBeerListArrayAdapter()
+    {
+        // Get the beer list from main activity
+        List<Beer> beerList = activityCallBack.getBeerList();
+        beerListArrayAdapter = new BeerArrayAdapter(Objects.requireNonNull(getActivity()), android.R.layout.simple_list_item_1, beerList, R.layout.row_beer_item); // Array adapter for the beer list
+        beerListView.setAdapter(beerListArrayAdapter);
+        beerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                moveToBeerDetailsScreen(position);
+            }
+        });
     }
 
     // Method for creating intent and passing the Beer object to the new activity
     private void moveToBeerDetailsScreen(int position)
     {
-        beerSelected = beerList.get(position);
         // Create the Intent to start new Activity
         Intent intent = new Intent(getContext(), BeerDetailsActivity.class);
         // Pass data to the Activity through the Intent
-        intent.putExtra("selectedBeer", beerSelected);
+        intent.putExtra("selectedBeer", beerListArrayAdapter.getItem(position));
         // Ask Android to start the new Activity
         startActivityForResult(intent, 5);
     }
-
 }

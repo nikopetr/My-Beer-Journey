@@ -38,11 +38,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         setUpFilter();
     }
 
-    List<Beer> getBeerList() {
-        return beerList;
-    }
-
-    void setUpFilter(){
+    private void setUpFilter(){
         // Using a custom filter in order to be able to search for a beer and get the results based on the beerName
         beerNameFilter = new Filter() {
             @Override
