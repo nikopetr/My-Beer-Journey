@@ -83,8 +83,8 @@ public class TastedBeersFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // If this is the code assigned to BeerDetailsActivity and returning Intent succeeded
-
+        // If the request code is the code assigned to BeerDetailsActivity and the result code is RESULT_OK
+        // then updating the list and the adapter since changes occurred
         if ((requestCode == 5) && (resultCode == RESULT_OK))
         {
             // Updates beer list and beers tasted list from the database after the changes
@@ -121,8 +121,7 @@ public class TastedBeersFragment extends Fragment {
         startActivityForResult(intent, 5);
     }
 
-    // It is used for resolving the problem about not refreshing the arrayAdapter when changing fragments
-    // and showed only previous results, even if the query was empty
+    // Used for refreshing the arrayAdapter when changing fragments
     @Override
     public void onDestroyView() {
         super.onDestroyView();

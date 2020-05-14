@@ -40,6 +40,7 @@ public class BeerCatalogFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_beer_catalog, container, false);
 
@@ -62,6 +63,8 @@ public class BeerCatalogFragment extends Fragment {
                 beerListArrayAdapter.getFilter().filter(newText);
                 return false;
             }
+
+
         });
         // TODO Add x, when clicked in body, to close the searchView
         searchView.setOnClickListener(new View.OnClickListener() {
@@ -78,11 +81,13 @@ public class BeerCatalogFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // If this is the code assigned to BeerDetailsActivity and returning Intent succeeded
+        // If the request code is the code assigned to BeerDetailsActivity and the result code is RESULT_OK
+        // then updating the list and the adapter since changes occurred
         if ((requestCode == 5) && (resultCode == RESULT_OK))
         {
             // Updates beer list and beers tasted list from the database after the changes
             activityCallBack.updateBeerLists();
+
             // Initializing Array adapter for the beer list
             initializeBeerListArrayAdapter(); //TODO check if there is a better way doing this instead of making the array adapter from the start
         }
@@ -114,6 +119,7 @@ public class BeerCatalogFragment extends Fragment {
         startActivityForResult(intent, 5);
     }
 
+    // Used for refreshing the arrayAdapter when changing fragments
     @Override
     public void onDestroyView() {
         super.onDestroyView();

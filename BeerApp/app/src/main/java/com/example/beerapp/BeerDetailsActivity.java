@@ -23,7 +23,8 @@ public class BeerDetailsActivity extends AppCompatActivity {
     private Toast toast;
     private Beer beerSelected; // Beer that was selected
     private DBHandler dbHandler; // DB Handler for the database interaction
-
+    // Used to determine if the data was changed since the activity call, has RESULT_OK (-1) value if the taste taste was changed
+    private int currentResultCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +46,28 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
         dbHandler = new DBHandler(this, null);
 
+        // Get the current variables values the saved instance state
         if (savedInstanceState != null)
-            beerSelected =(Beer)savedInstanceState.getSerializable("selectedBeer");
+        {
+            beerSelected = (Beer)savedInstanceState.getSerializable("selectedBeer");
+            currentResultCode = savedInstanceState.getInt("currentResultCode");
+            // Makes an Intent with the new current result code
+            makeReturnIntent();
+        }
+
         else
         {
+            // Set the result code to RESULT_CANCELED(0), since no changes occurred so far
+            currentResultCode = RESULT_CANCELED;
+
             // Get Bundle from the Intent
             Bundle extras = getIntent().getExtras();
+
             // If there are data passed in the Intent retrieve the data
             if (extras != null)
                 beerSelected = (Beer) extras.getSerializable("selectedBeer");
+
+            // Create Intent to return the changed beer to the Main Activity
         }
 
         // Updates the UI
@@ -102,8 +116,9 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
         // Saves which beer was loaded
         outState.putSerializable("selectedBeer", beerSelected);
+        // Saves the current result code
+        outState.putInt("currentResultCode", currentResultCode);
     }
-
 
     // Reverses the current tasted variable of the beer and updates the buttons text's
     void updateBeerTasted(){
@@ -136,12 +151,23 @@ public class BeerDetailsActivity extends AppCompatActivity {
                 addTastedButton.setText(R.string.add_tasted);
             }
 
-            // Create Intent to return the changed beer to the Main Activity
-            Intent returnData = new Intent();
-//            returnData.putExtra("tasted", tasted);
-            setResult(RESULT_OK, returnData);
+            // Changing the result code which the intent returns, according to if the taste state is changed.
+            // If the current result code is equal to RESULT_CANCELED, then change it to RESULT_OK,
+            // else change it to RESULT_CANCELED
+            if(currentResultCode == RESULT_CANCELED)
+                currentResultCode = RESULT_OK;
+            else
+                currentResultCode = RESULT_CANCELED;
+            // Makes an Intent with the new current result code
+            makeReturnIntent();
         }
         else
             Log.i("Database interaction", "Could not update beer tasted state");
+    }
+
+    // Makes an Intent with the current result code to return to the previous activity
+    private void makeReturnIntent(){
+        Intent returnData = new Intent();
+        setResult(currentResultCode, returnData);
     }
 }
