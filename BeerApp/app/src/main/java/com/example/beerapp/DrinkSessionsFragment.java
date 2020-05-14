@@ -52,7 +52,6 @@ public class DrinkSessionsFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,14 +118,12 @@ public class DrinkSessionsFragment extends Fragment {
         // Initialize the best session text
         ((TextView)rootView.findViewById(R.id.bestSessionTextView)).setText(String.format(getString(R.string.litres_format_string), dbHandler.getBestSession()));
 
-
         // If the user is currently drinking, continuing the drink session from where it was left
         if (isDrinking)
         {
             // set the chronometer's base to the previous base.
             startDrinkSession(chronometerHelper.getStartTime());
             ((TextView)rootView.findViewById(R.id.litresDrankTextView)).setText(String.format(getString(R.string.litres_format_string), totalLitresDrank));
-
         }
 
         return rootView;
