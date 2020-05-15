@@ -7,10 +7,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 
+// Class used to serialize a Bitmap so it can be used inside a serializable object
+// Implements Serializable in order to implement its methods
 class SerialBitmap implements Serializable {
 
     private Bitmap bitmap;
 
+    // Constructor of the class, gets the Bitmap as an array of bytes and decodes it into a Bitmap
     SerialBitmap(byte[] beerImageBytes) {
         // Take your existing call to BitmapFactory and put it here
         if (beerImageBytes != null)
@@ -38,6 +41,7 @@ class SerialBitmap implements Serializable {
         byteStream.close();
     }
 
+    // Getter for the Bitmap in Bitmap format
     Bitmap getBitmap() {
         return bitmap;
     }
