@@ -1,5 +1,7 @@
 package com.example.beerapp;
 
+// Class used for the user's tasted beers fragment
+// Extending the Catalog fragment
 public class TastedBeersFragment extends CatalogFragment {
 
     public TastedBeersFragment(){

@@ -10,7 +10,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 
-
 import androidx.fragment.app.Fragment;
 
 import java.util.List;
@@ -18,6 +17,9 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
+
+// Abstract class used for presenting beers in a list with the
+// given inflate resource id, list view id and item view id
 public abstract class CatalogFragment extends Fragment {
 
     private FragmentListener activityCallBack; // Activity that this fragment is attached to
@@ -80,11 +82,11 @@ public abstract class CatalogFragment extends Fragment {
                 return false;
             }
         });
-        // TODO Add x, when clicked in body, to close the searchView
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((SearchView) view).onActionViewExpanded();
+                // Expand the search bar and give focus to it so the user can search for a beer
+                ((SearchView) view).setIconified(false);
             }
         });
         return rootView;
@@ -102,7 +104,7 @@ public abstract class CatalogFragment extends Fragment {
             // Updates beer list and beers tasted list from the database after the changes
             activityCallBack.updateBeerLists();
 
-            // Initializing Array adapter for the beer list
+            // Initializing Array adapter for the changed beer list
             initializeBeerListArrayAdapter();
         }
     }

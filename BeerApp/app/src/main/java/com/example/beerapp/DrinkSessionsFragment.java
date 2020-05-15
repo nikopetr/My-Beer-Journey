@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
-// Fragment used for displaying user's drinking stats, and for having a new drink session
+// Class used for displaying in a fragment, the user's drinking stats, and for having a new drink session
 public class DrinkSessionsFragment extends Fragment {
 
     private static final double PINT_TO_LITRE = 0.5;
@@ -38,8 +38,8 @@ public class DrinkSessionsFragment extends Fragment {
     private long drinkingStartingTime; // The time that the drink session has started, used to help with the chronometer timer
 
      public DrinkSessionsFragment( ) {
-         // Reburied empty constructor to call Fragment's constructor
-    }
+         // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
+      }
 
     // Checks if the activity implements the interface otherwise throw exception
     @Override

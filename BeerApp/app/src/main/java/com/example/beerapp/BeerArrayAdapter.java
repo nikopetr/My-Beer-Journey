@@ -16,12 +16,13 @@ import java.util.List;
 
 // Class used as a custom adapter in order to have an image for each item, for our ListVIew or GridView of Beers
 public class BeerArrayAdapter extends ArrayAdapter<Beer> {
-    private List<Beer> beerList;
-    private List<Beer> adaptedBeerList;
-    private Activity context;
-    private Filter beerNameFilter;
+    private List<Beer> beerList; // The list which contains all the beers given to the adapter
+    private List<Beer> adaptedBeerList; // The list with the beers that are currently showed in the adapter
+    private Activity context; // The activity that has the adapter
+    private Filter beerNameFilter; // A filter which is used for searching a beer by it's name
     private int itemViewId; // The id item that is used for this adapter
 
+    // Constructor of the class, initializing the variables used by the adapter
     BeerArrayAdapter(Activity context, int resource, List<Beer> beerList, int itemViewId) {
         super(context, resource, beerList);
         this.context = context;
@@ -38,6 +39,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
         setUpFilter();
     }
 
+    // Sets up the filter which is used to search for a beer
     private void setUpFilter(){
         // Using a custom filter in order to be able to search for a beer and get the results based on the beerName
         beerNameFilter = new Filter() {
@@ -45,10 +47,6 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 List<Beer> beerSuggestions = new ArrayList<>();
-
-//                For debugging: print in the logcat (Debug level)
-//                for (Beer beer : BeerArrayAdapter.this.beerList)
-//                    Log.d("Beers in list",beer.getName());
 
                 if (constraint == null || constraint.length() == 0)
                     beerSuggestions.addAll(BeerArrayAdapter.this.beerList);
@@ -62,13 +60,13 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
                             beerSuggestions.add(beer);
                 }
 
-
                 results.values = beerSuggestions;
                 results.count = beerSuggestions.size();
 
                 return results;
             }
 
+            // Adds the beers found to the results
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 clear();
@@ -76,6 +74,7 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
                 notifyDataSetChanged();
             }
 
+            // Converting the result value to the beer name
             @Override
             public CharSequence convertResultToString(Object resultValue) {
                 return (((Beer)(resultValue)).getName());
@@ -85,18 +84,15 @@ public class BeerArrayAdapter extends ArrayAdapter<Beer> {
 
     @NonNull
     @Override
+    // Returns the beer name Filter
     public Filter getFilter() {
         return beerNameFilter;
     }
 
-    // Method called for drawing each row.
+    // Method called for drawing each item
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-
-//        For debugging: print in the logcat (Debug level)
-//        Log.d("BeerItemCreated", String.valueOf(position));
-
         View beerItemView = convertView;
         LayoutInflater inflater = context.getLayoutInflater();
 

@@ -17,12 +17,25 @@ import java.util.Objects;
 // and set his name
 public class WelcomeScreenActivity extends AppCompatActivity {
 
-    private EditText nameEditText;
+    private EditText nameEditText; // EditText used for the input of the user's name
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
+
+        // Initialize DB Handler
+        DBHandler dbHandler = new DBHandler(this, null);
+
+        // If the user name is already set, redirecting user to the MainActivity
+        if(dbHandler.getUserName() != null)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        // If the username is null, user has to sets his "name"
 
         // Input Filter for the name edit text in the welcome screen to check the name length
         // Max allowed length is 15 characters. After 15, no other character is added
@@ -33,18 +46,10 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 
         // Hides the ActionBar
         Objects.requireNonNull(getSupportActionBar()).hide();
-        // Initialize DB Handler
-        DBHandler dbHandler = new DBHandler(this, null);
-
-        // If the username is null, redirecting user to the welcome screen which is used on the first time the app launches to set his "name"
-        if(dbHandler.getUserName() != null)
-        {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
     }
 
+
+    // Method used to save the name to the database and redirect user to the MainActivity
     public void startMainActivity(View view)
     {
         // Initialize DB Handler
@@ -71,6 +76,4 @@ public class WelcomeScreenActivity extends AppCompatActivity {
                 Log.i("Database Interaction", "Could not save username to the database");
         }
     }
-
-
 }

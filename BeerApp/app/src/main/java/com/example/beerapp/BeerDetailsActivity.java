@@ -20,7 +20,7 @@ import java.util.Objects;
 // Class used to display a beer's information and add it to user taste lists
 public class BeerDetailsActivity extends AppCompatActivity {
 
-    private Toast toast;
+    private Toast toast; // Toast for showing messages when the beer is added/removed from the tasted list
     private Beer beerSelected; // Beer that was selected
     private DBHandler dbHandler; // DB Handler for the database interaction
     // Used to determine if the data was changed since the activity call, has RESULT_OK (-1) value if the taste taste was changed
@@ -44,6 +44,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         ImageView beerImageView = findViewById(R.id.beerImageView);
         Button addTastedButton = findViewById(R.id.addTastedButton);
 
+        // Initialises the db handler
         dbHandler = new DBHandler(this, null);
 
         // Get the current variables values the saved instance state
@@ -99,7 +100,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
     }
 
-    //method for go-back button arrow
+    // Method for go-back button arrow
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==android.R.id.home)

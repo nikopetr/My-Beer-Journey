@@ -1,6 +1,5 @@
 package com.example.beerapp;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import androidx.fragment.app.Fragment;
 public class SettingsFragment extends Fragment {
 
     public SettingsFragment( ) {
-        // Reburied empty constructor to call Fragment's constructor
+        // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
     }
 
     @Override
