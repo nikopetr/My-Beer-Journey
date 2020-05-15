@@ -2,6 +2,7 @@ package com.example.beerapp;
 
 import java.util.List;
 
+// Interface used to force classes to implement its methods which are used in the fragments
 interface FragmentListener {
 
     // Returns a List including all beers

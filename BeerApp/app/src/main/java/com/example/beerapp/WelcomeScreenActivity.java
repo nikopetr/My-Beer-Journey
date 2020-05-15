@@ -13,6 +13,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
+// Class used when the app launches in order to welcome user when he enters the app for the first time
+// and set his name
 public class WelcomeScreenActivity extends AppCompatActivity {
 
     private EditText nameEditText;

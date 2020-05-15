@@ -1,23 +1,21 @@
 package com.example.beerapp;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import java.io.Serializable;
-import java.sql.Blob;
 
 // Class used to represent a beer
 class Beer implements Serializable {
-    private int _id;
+    private int _id; // The id of the beer
     private String name;
     private String manufacturer;
     private String country;
-    private float abv;
-    private String type; // String which represents the type of the beer
+    private float abv; // Alcohol by volume contained in the beer
+    private String type; // Represents the type of the beer
     private boolean tasted; // boolean that represents if the user has tasted this beer or not
     private SerialBitmap beerImage; // bitmap for the image in list
-//    private SerialBitmap beerImageHD; // bitmap for the image in details
 
+    // Empty constructor of the class
     Beer()
     {
 
@@ -32,9 +30,7 @@ class Beer implements Serializable {
         this.type = type;
         this.tasted =  tasted;
         this.beerImage = beerImage;
-        //this.beerImageHD = beerImageHD;
     }
-
 
     void set_id(int _id) {
         this._id = _id;
@@ -62,13 +58,11 @@ class Beer implements Serializable {
 
     void setBeerImage(byte[] beerImageBytes) {this.beerImage = new SerialBitmap(beerImageBytes);}
 
-//    void setBeerImageHD(byte[] beerImageHDBytes) {this.beerImageHD = new SerialBitmap(beerImageHDBytes);}
-
-    public boolean isTasted() {
+    boolean isTasted() {
         return tasted;
     }
 
-    public void setTasted(boolean tasted) {
+    void setTasted(boolean tasted) {
         this.tasted = tasted;
     }
 
@@ -96,20 +90,13 @@ class Beer implements Serializable {
         return type;
     }
 
-
+    // Returns the image of the beer in a bitmap
     Bitmap getBeerImage() {
         if (beerImage == null)
             return null;
         return beerImage.getBitmap();
     }
 
-//    Bitmap getBeerImageHD() {
-//        if (beerImageHD == null)
-//            return null;
-//        return beerImageHD.getBitmap();
-//    }
-
+    // Returns the serial bit map of the image for serialized usage
     SerialBitmap getBeerImageSerial() {return beerImage;}
-
-//    SerialBitmap getBeerImageHDSerial() {return beerImageHD;}
 }
