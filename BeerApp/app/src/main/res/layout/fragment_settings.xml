@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -34,170 +35,70 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="1276dp"
+            tools:layout_editor_absoluteY="1dp">
 
             <TextView
-                android:id="@+id/resetJourneyTitleTextView"
+                android:id="@+id/purposeQuestionTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-black"
-                android:text="@string/reset_title"
+                android:text="@string/question_purpose_of_app"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/resetStatsText"
+                android:id="@+id/purposeAnswerText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="@string/reset_stats_text"
+                android:text="@string/answer_purpose_of_app"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/resetJourneyTitleTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/purposeQuestionTitleTextView" />
 
             <Button
                 android:id="@+id/resetStatsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/custom_buttons"
+                android:drawableStart="@drawable/ic_reset_stats_24dp"
                 android:text="@string/reset_stats_button"
                 android:textColor="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.063"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/resetStatsText" />
-
-            <TextView
-                android:id="@+id/resetJourneyText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/reset_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/resetStatsButton" />
+                app:layout_constraintTop_toBottomOf="@+id/purposeAnswerText" />
 
             <Button
                 android:id="@+id/resetJourneyButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
+                android:layout_marginBottom="4dp"
                 android:background="@drawable/custom_buttons"
+                android:drawableStart="@drawable/ic_start_over_24dp"
                 android:text="@string/reset_button"
                 android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/resetJourneyText" />
-
-            <TextView
-                android:id="@+id/faq_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="80dp"
-                android:fontFamily="sans-serif-black"
-                android:text="@string/faq_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/resetJourneyText" />
-
-            <TextView
-                android:id="@+id/firstQuestionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/first_question"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/faq_title" />
-
-            <TextView
-                android:id="@+id/firstAnswerTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif"
-                android:text="@string/first_answer"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstQuestionTextView" />
-
-            <TextView
-                android:id="@+id/secondQuestionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/second_question"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstAnswerTextView" />
-
-            <TextView
-                android:id="@+id/secondAnswerTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif"
-                android:text="@string/second_answer"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/secondQuestionTextView" />
-
-            <TextView
-                android:id="@+id/thirdQuestionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/third_question"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/secondAnswerTextView" />
-
-            <TextView
-                android:id="@+id/thirdAnswerTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif"
-                android:text="@string/third_answer"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/thirdQuestionTextView" />
+                app:layout_constraintHorizontal_bias="0.98"
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
