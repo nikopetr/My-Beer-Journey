@@ -42,7 +42,7 @@
     <string name="reset_stats_text">If you only want to reset your litres consumed and your times click the button below:</string>
     <string name="reset_stats_button">RESET STATS</string>
     <string name="faq_title">FAQ</string>
-    <string name="first_question">1) What is the point of the application?</string>
+    <string name="first_question">1) What is the purpose of the application?</string>
     <string name="first_answer">The application is made for all the beer lovers who want to explore different beers from all across the globe.</string>
     <string name="second_question">2) How do I start my beer journey?</string>
     <string name="second_answer">Just head to the Drink Session section and when you start drinking beer press the START SESSION button and select the beer you are drinking. When you are done drinking press the STOP SESSION button to save your drinking session.</string>
