@@ -11,6 +11,7 @@ import java.io.Serializable;
 // Implements Serializable in order to implement its methods
 class SerialBitmap implements Serializable {
 
+    // Used to store the image of the beer in bitmap format
     private Bitmap bitmap;
 
     // Constructor of the class, gets the Bitmap as an array of bytes and decodes it into a Bitmap

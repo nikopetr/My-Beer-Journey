@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-// Class used as a custom adapter in order to have an image for each item, for our ListVIew or GridView of Beers
+// Class used as a custom adapter in order to have a beer object for each item, for the AbsListView of Beers
 public class BeerArrayAdapter extends ArrayAdapter<Beer> {
     private List<Beer> beerList; // The list which contains all the beers given to the adapter
     private List<Beer> adaptedBeerList; // The list with the beers that are currently showed in the adapter

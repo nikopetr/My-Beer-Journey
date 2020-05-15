@@ -26,13 +26,14 @@ public abstract class CatalogFragment extends Fragment {
     private BeerArrayAdapter beerListArrayAdapter; // Array adapter for the beer list
     private AbsListView beerListView; // The view used to present the beers
     private int inflateResourceId; // The id of the XML file which the layout of the fragment is inflated
-    private int listViewId; // The id of the list used for the beerListView
+    private int listViewId; // The id of the item used for the beerListView
     private int itemViewId; // The id of the item used in the list view
 
     public CatalogFragment(){
         // Required empty public constructor in for onCreate(savedInstanceState) of the activity which has the fragment
     }
 
+    // Constructor of class with the given parameters
     CatalogFragment(int inflateResourceId, int listViewId, int itemViewId){
         this.inflateResourceId = inflateResourceId;
         this.listViewId = listViewId;
