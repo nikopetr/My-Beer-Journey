@@ -329,14 +329,17 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Method used to reset the whole user's journey data from the database
-    // Reset beers tasted and user stats
+    // Reset beers tasted, user's name used in application and user stats
     // Returns true if a row from the table was affected
     boolean resetUserData() {
         // Initialise the database
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_TASTED, 0);
-        return (db.update(TABLE_BEERS, cv, null, null) >=1 && resetUserStats());
+        ContentValues cvBeersTable = new ContentValues();
+        ContentValues cvUserTable = new ContentValues();
+        cvBeersTable.put(COLUMN_TASTED, 0); // In order to reset the beers tasted
+        cvUserTable.putNull(COLUMN_NAME); // In order to remove user's name
+        return (db.update(TABLE_BEERS, cvBeersTable, null, null) >=1 &&
+                db.update(TABLE_USER, cvUserTable, null, null) >=1 && resetUserStats());
     }
 
     // Method used to reset user drinking session stats (best session, total time drinking and total litres consumed)

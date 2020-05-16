@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.Objects;
 
 // Class used for the settings screen when the user wants to reset his/her stats/journey
 // Creates a dialog informing the user about the resetting of the stats/journey and asks for confirmation
@@ -58,7 +61,7 @@ public class ConfirmationDialog extends DialogFragment {
             builder.setPositiveButton(R.string.dialog_positive_button_journey, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    // Resetting user stats and tasted beers on the db
+                    // Resetting user stats, name and tasted beers on the db
 
                     if(activityCallBack.getDbHandler().resetUserData())
                     {
@@ -73,6 +76,11 @@ public class ConfirmationDialog extends DialogFragment {
                         toast = Toast.makeText(getContext(), "Starting Over", Toast.LENGTH_SHORT); //add toast message for Start over
                         // Show toast message about starting over
                         toast.show();
+
+                        // Redirects user to the welcome screen to set his name again
+                        Intent intent = new Intent(getContext(), WelcomeScreenActivity.class);
+                        (Objects.requireNonNull(getActivity())).finish();
+                        startActivity(intent);
                     }
                     else
                         Log.i("Database Interaction", "Could not reset user data on databse");

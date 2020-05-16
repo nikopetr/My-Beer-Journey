@@ -48,7 +48,7 @@
 
     <!-- String for confirmation dialog  -->
     <string name="dialog_title_journey_reset">Start Over</string>
-    <string name="dialog_message_journey_reset">You are about to reset all the progress you did so far. That means that the tasted beers list, as well as the total time and litres will be reset 0.</string>
+    <string name="dialog_message_journey_reset">You are about to reset all the progress you did so far. That means your user name will be reset, the tasted beers list, as well as the total time and litres will be reset to 0.</string>
     <string name="dialog_title_stats_reset">Reset Stats</string>
     <string name="dialog_message_stats_reset">You are about to reset your stats. That means that the total time and litres will be reset to 0. This will not reset your tasted beers list.</string>
     <string name="dialog_positive_button_journey">Start Over</string>
