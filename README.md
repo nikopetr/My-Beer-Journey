@@ -8,7 +8,7 @@ Our goal is to add as many different beers that exist to the application so that
 ## Usage 
 
 Anyobody can use this application as long he is a beer lover!
-Simply download the apk file and isntall it to our Android device (Google Play download is coming soon).
+Simply download the APK file and isntall it to your Android device (Google Play download is coming soon).
 
 ## Can I contribute to the app?
 Since we aim to add more beers to our database, we encourage everybody to contribute and add more beer data.
