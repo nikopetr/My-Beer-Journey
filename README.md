@@ -1,7 +1,7 @@
 # My-Beer-Journey
 
 ## About
-An android application which includes 100 popular beers from all over the world and aims at user through a “beer trip” to try all these beers of the app. The app also records the liters of beer that the user consumed in a single session and stores them in total of consumption. 
+An android application which includes 100 popular beers from all over the world and aims through the user's “beer journey”, to make him try all these beers that are lsited in the application. Another usage of The app, is that it records the total consumption of beer that the user consumed in a single session and stores them in the total of consumption of his journey. 
 
 Our goal is to add as many different beers that exist to the application so that the users will be more satisfied.
 
