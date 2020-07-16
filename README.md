@@ -6,6 +6,7 @@ We aim to add more beers to our database, so feel free to contribute and more be
 
 Anyobody can use this application as long he is a beer lover!
 
+![Image description](/images-readme/welcome.png)
 ![Image description](/images-readme/example.png)
 
 
