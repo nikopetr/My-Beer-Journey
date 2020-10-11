@@ -10,7 +10,6 @@ Our goal is to add as many different beers that exist to the application so that
 ![Image description](/images-readme/example.png)
 
 ## Usage 
-
 Anyobody can use this application as long he is a beer lover!
 Simply download the APK file and isntall it to your Android device (Google Play download is coming soon).
 
